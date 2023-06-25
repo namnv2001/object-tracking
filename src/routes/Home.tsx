@@ -1,7 +1,14 @@
-import React from 'react';
+import useMqtt from 'hooks';
+import React, { useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
 const Root = () => {
+  const { subscribeTopic } = useMqtt();
+
+  useEffect(() => {
+    subscribeTopic({ topic: 'test' });
+  });
+
   return (
     <div id="sidebar" className="min-h-full">
       <nav className="bg-gray-800">
