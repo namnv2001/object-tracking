@@ -1,5 +1,5 @@
 import { mqttConstants } from 'constants/mqtt';
-import { connect } from 'mqtt';
+import { connect } from 'mqtt/dist/mqtt';
 import { useState } from 'react';
 import { ICoordinates, IPublishPayload, ISubscription } from 'types';
 

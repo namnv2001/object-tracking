@@ -17,5 +17,5 @@
     "jsx": "react",
     "moduleResolution": "node"
   },
-  "include": ["src"]
+  "include": ["src", "mqtt.d.ts"]
 }
