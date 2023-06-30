@@ -1,17 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Root from 'routes/Home';
+import Home from 'routes/Home';
 import Metric from 'routes/Metric';
+import Monitor from 'routes/Monitor';
 import NotFoundPage from 'routes/NotFoundPage';
 import 'styles/index.css';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root />,
+    element: <Home />,
     errorElement: <NotFoundPage />,
     children: [
+      {
+        path: '/monitor',
+        element: <Monitor />,
+      },
       {
         path: '/metric',
         element: <Metric />,

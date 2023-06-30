@@ -8,3 +8,8 @@ export interface IPublishPayload {
   payload: string;
   qos?: 0 | 1 | 2;
 }
+
+export interface ICoordinates {
+  latitude: number;
+  longitude: number;
+}

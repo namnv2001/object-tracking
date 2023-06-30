@@ -1,14 +1,7 @@
-import useMqtt from 'hooks';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
-const Root = () => {
-  const { subscribeTopic } = useMqtt();
-
-  useEffect(() => {
-    subscribeTopic({ topic: 'test' });
-  });
-
+const Home = () => {
   return (
     <div id="sidebar" className="min-h-full">
       <nav className="bg-gray-800">
@@ -32,6 +25,12 @@ const Root = () => {
                     Home
                   </Link>
                   <Link
+                    to="/monitor"
+                    className="hover:bg-gray-700 text-white rounded-md px-3 py-2 text-sm font-medium"
+                  >
+                    Monitor
+                  </Link>
+                  <Link
                     to="/metric"
                     className="hover:bg-gray-700 text-white rounded-md px-3 py-2 text-sm font-medium"
                   >
@@ -50,4 +49,4 @@ const Root = () => {
   );
 };
 
-export default Root;
+export default Home;
