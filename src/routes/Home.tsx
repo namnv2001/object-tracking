@@ -1,5 +1,15 @@
+import LinkItem from 'components/LinkItem';
+import { path } from 'constants/common';
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+
+const Logo = () => {
+  return (
+    <div className="flex-shrink-0">
+      <div className="w-8 h-8 bg-green-500 rounded-full animate-pulse" />
+    </div>
+  );
+};
 
 const Home = () => {
   return (
@@ -8,34 +18,12 @@ const Home = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <img
-                  className="h-8 w-8"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                  alt="Object tracking"
-                />
-              </div>
+              <Logo />
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
-                  <Link
-                    to="/"
-                    className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
-                    aria-current="page"
-                  >
-                    Home
-                  </Link>
-                  <Link
-                    to="/monitor"
-                    className="hover:bg-gray-700 text-white rounded-md px-3 py-2 text-sm font-medium"
-                  >
-                    Monitor
-                  </Link>
-                  <Link
-                    to="/metric"
-                    className="hover:bg-gray-700 text-white rounded-md px-3 py-2 text-sm font-medium"
-                  >
-                    Metric
-                  </Link>
+                  {path.map((item, index) => (
+                    <LinkItem path={item.path} name={item.name} key={index} />
+                  ))}
                 </div>
               </div>
             </div>

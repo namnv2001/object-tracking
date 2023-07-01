@@ -13,3 +13,8 @@ export interface ICoordinates {
   latitude: number;
   longitude: number;
 }
+
+export interface ILinkItem {
+  path: string;
+  name: string;
+}

@@ -1,21 +1,22 @@
-import useMqtt from 'hooks';
 import { mqttConstants } from 'constants/mqtt';
-import React, { useEffect, useState } from 'react';
+import { useMqttContext } from 'context';
+import useMqtt from 'hooks';
+import React, { useEffect } from 'react';
 
 const Monitor = () => {
-  const [isSubscribed, setIsSubscribed] = useState(true);
+  const { isSubscribed, toggleSubscribe } = useMqttContext();
   const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
   const { topic } = mqttConstants;
 
-  const obSubscribe = () => {
-    setIsSubscribed((value) => !value);
+  const onToggleSubscribe = () => {
+    toggleSubscribe();
   };
 
   useEffect(() => {
     isSubscribed ? subscribeTopic({ topic }) : unsubscribeTopic({ topic });
   }, [isSubscribed, subscribeTopic, unsubscribeTopic, topic]);
 
-  const onPublish = () => {
+  const onClickPublishMessage = () => {
     publishMessage({
       topic,
       payload: 'Hello world from my computer',
@@ -25,15 +26,15 @@ const Monitor = () => {
     <div>
       <button
         className="text-white p-2 rounded-sm bg-green-400"
-        onClick={onPublish}
+        onClick={onClickPublishMessage}
       >
         Publish message
       </button>
       <button
         className="text-white p-2 rounded-sm bg-green-400"
-        onClick={obSubscribe}
+        onClick={onToggleSubscribe}
       >
-        Subscribe
+        {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
       </button>
     </div>
   );

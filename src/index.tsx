@@ -1,3 +1,4 @@
+import { MQTTProvider } from 'context';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
@@ -28,4 +29,8 @@ const router = createBrowserRouter([
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container as HTMLElement);
 
-root.render(<RouterProvider router={router} />);
+root.render(
+  <MQTTProvider>
+    <RouterProvider router={router} />
+  </MQTTProvider>
+);
