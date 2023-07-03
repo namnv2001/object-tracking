@@ -1,13 +1,11 @@
 import { mqttConstants } from 'constants/mqtt';
+import { useMqttContext } from 'context';
 import { connect } from 'mqtt/dist/mqtt';
-import { useState } from 'react';
-import { ICoordinates, IPublishPayload, ISubscription } from 'types';
+import { IPublishPayload, ISubscription } from 'types';
 
-// fix issues: https://github.com/mqttjs/MQTT.js/issues/1412#issuecomment-1046369875
 // tutorial: https://www.emqx.com/en/blog/mqtt-js-tutorial
-// consider using paho-mqtt if too many errors happen
 const useMqtt = () => {
-  const [coordinates, setCoordinates] = useState<ICoordinates[]>([]);
+  const { handleLocationData } = useMqttContext();
   const client = connect('ws://broker.emqx.io:8083/mqtt', {
     clientId: mqttConstants.clientId,
     username: mqttConstants.username,
@@ -69,14 +67,16 @@ const useMqtt = () => {
 
   client.on('message', (_topic, payload, _packet) => {
     const [lat, long] = payload.toString().split(',');
-    console.log({ lat, long });
-    setCoordinates((res) => [
-      ...res,
-      {
-        latitude: parseFloat(lat),
-        longitude: parseFloat(long),
-      },
-    ]);
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(long);
+    const purifyData = {
+      latitude,
+      longitude,
+    };
+
+    if (isNaN(latitude) || isNaN(longitude)) {
+      console.log('Invalid data:', payload.toString());
+    } else handleLocationData(purifyData);
   });
 
   return {
@@ -84,7 +84,6 @@ const useMqtt = () => {
     unsubscribeTopic,
     publishMessage,
     disconnect,
-    coordinates,
   };
 };
 

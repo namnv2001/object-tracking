@@ -1,3 +1,4 @@
+import { ConfigProvider } from 'antd';
 import { MQTTProvider } from 'context';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -26,11 +27,19 @@ const router = createBrowserRouter([
   },
 ]);
 
+const theme = {
+  token: {
+    colorPrimary: '#ff2c2c',
+  },
+};
+
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container as HTMLElement);
 
 root.render(
   <MQTTProvider>
-    <RouterProvider router={router} />
+    <ConfigProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ConfigProvider>
   </MQTTProvider>
 );

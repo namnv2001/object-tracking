@@ -1,3 +1,4 @@
+import { Button, Switch } from 'antd';
 import { mqttConstants } from 'constants/mqtt';
 import { useMqttContext } from 'context';
 import useMqtt from 'hooks';
@@ -24,18 +25,10 @@ const Monitor = () => {
   };
   return (
     <div>
-      <button
-        className="text-white p-2 rounded-sm bg-green-400"
-        onClick={onClickPublishMessage}
-      >
+      <Button type="primary" onClick={onClickPublishMessage}>
         Publish message
-      </button>
-      <button
-        className="text-white p-2 rounded-sm bg-green-400"
-        onClick={onToggleSubscribe}
-      >
-        {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-      </button>
+      </Button>
+      <Switch checked={isSubscribed} onChange={onToggleSubscribe} />
     </div>
   );
 };
