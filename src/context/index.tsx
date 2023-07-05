@@ -3,8 +3,8 @@ import React, {
   createContext,
   useContext,
   useState,
-} from 'react';
-import { IContextProps, ILocationData } from 'types';
+} from "react";
+import { IContextProps, ILocationData } from "types";
 
 export const MQTTContext = createContext<IContextProps>({
   isSubscribed: false,

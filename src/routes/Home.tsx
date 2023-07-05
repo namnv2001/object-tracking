@@ -1,9 +1,9 @@
-import { Layout } from 'antd';
-import LinkItem from 'components/LinkItem';
-import Logo from 'components/Logo';
-import { path } from 'constants/common';
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Layout } from "antd";
+import LinkItem from "components/LinkItem";
+import Logo from "components/Logo";
+import { path } from "constants/common";
+import React from "react";
+import { Outlet, useLocation } from "react-router-dom";
 
 const Home = () => {
   const location = useLocation();
@@ -33,7 +33,7 @@ const Home = () => {
       <div id="detail">
         <Layout className="mx-auto max-w-7xl h-screen sm:px-6 lg:px-8">
           <div className="mt-10">
-            {location.pathname !== '/' ? (
+            {location.pathname !== "/" ? (
               <Outlet />
             ) : (
               <div className="text-2xl">

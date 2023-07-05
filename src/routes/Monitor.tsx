@@ -1,8 +1,8 @@
-import { Button, Switch } from 'antd';
-import { mqttConstants } from 'constants/mqtt';
-import { useMqttContext } from 'context';
-import useMqtt from 'hooks';
-import React, { useEffect } from 'react';
+import { Button, Switch } from "antd";
+import { mqttConstants } from "constants/mqtt";
+import { useMqttContext } from "context";
+import useMqtt from "hooks/useMqtt";
+import React, { useEffect } from "react";
 
 const Monitor = () => {
   const { isSubscribed, toggleSubscribe } = useMqttContext();
@@ -20,7 +20,7 @@ const Monitor = () => {
   const onClickPublishMessage = () => {
     publishMessage({
       topic,
-      payload: 'Hello world from my computer',
+      payload: "Hello world from my computer",
     });
   };
   return (
