@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const ErrorPage = () => {
   return (
@@ -106,7 +106,7 @@ const ErrorPage = () => {
           onClick={() => window.history.back()}
           className="mt-6 text-gray-500 font-mono text-xl bg-gray-200 p-3 rounded-md hover:shadow-md"
         >
-          Go back{' '}
+          Go back{" "}
         </button>
       </center>
     </div>

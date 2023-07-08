@@ -1,14 +1,14 @@
 export const path = [
   {
-    path: '/',
-    name: 'Home',
+    path: "/",
+    name: "Home",
   },
   {
-    path: '/monitor',
-    name: 'Monitor',
+    path: "/monitor",
+    name: "Monitor",
   },
   {
-    path: '/metric',
-    name: 'Metric',
+    path: "/metric",
+    name: "Metric",
   },
 ];

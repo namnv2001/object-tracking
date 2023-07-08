@@ -3,19 +3,24 @@ import React, {
   createContext,
   useContext,
   useState,
-} from 'react';
-import { IContextProps, ILocationData } from 'types';
+} from "react";
+import { IContextProps, ILocationData } from "types";
 
 export const MQTTContext = createContext<IContextProps>({
   isSubscribed: false,
-  toggleSubscribe: () => {},
   locationData: [],
+  locationExcelData: [],
+  toggleSubscribe: () => {},
   handleLocationData: () => {},
+  handleLocationExcelData: () => {},
 });
 
 export const MQTTProvider = ({ children }: PropsWithChildren) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [locationData, setLocationData] = useState<ILocationData[]>([]);
+  const [locationExcelData, setLocationExcelData] = useState<ILocationData[]>(
+    []
+  );
 
   const toggleSubscribe = () => {
     setIsSubscribed((value) => !value);
@@ -25,13 +30,19 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
     setLocationData((value) => [...value, data]);
   };
 
+  const handleLocationExcelData = (data: ILocationData[]) => {
+    setLocationExcelData(data);
+  };
+
   return (
     <MQTTContext.Provider
       value={{
         isSubscribed,
-        toggleSubscribe,
         locationData,
+        toggleSubscribe,
+        locationExcelData,
         handleLocationData,
+        handleLocationExcelData,
       }}
     >
       {children}

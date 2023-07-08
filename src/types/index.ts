@@ -21,8 +21,10 @@ export interface ILocationData {
 }
 
 export interface IContextProps {
-  toggleSubscribe: () => void;
   isSubscribed: boolean;
   locationData: ILocationData[];
+  locationExcelData: ILocationData[];
+  toggleSubscribe: () => void;
   handleLocationData: (data: ILocationData) => void;
+  handleLocationExcelData: (data: ILocationData[]) => void;
 }
