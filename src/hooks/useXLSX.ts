@@ -1,21 +1,56 @@
-import * as fs from "fs";
-import { read, readFile, set_fs } from "xlsx";
+import { useMqttContext } from "context";
+import { ILocationData } from "types";
+import { read, utils, write } from "xlsx";
+const saveAs = require("file-saver");
 
-// set_fs(fs);
+const useXLSX = () => {
+  const { handleLocationExcelData } = useMqttContext();
 
-const useXLSX = (path: string) => {
-  const readXLSXFile = () => {
-    try {
-      const workbook = read(path, { type: "binary" });
-      return workbook;
-    } catch (e) {
-      console.log("error", e);
-      return {};
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      // Handle the file reading completion
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = read(data, { type: "array" });
+
+        // Assuming there's only one sheet, read its data
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = utils.sheet_to_json(worksheet, { header: 1 });
+
+        // Process the jsonData as needed
+        console.log(jsonData);
+        // handleLocationExcelData(jsonData);
+      };
+
+      // Start reading the file
+      reader.readAsArrayBuffer(file);
     }
   };
 
+  // Function to export data to Excel
+  const exportToExcel = (data: ILocationData[]) => {
+    const worksheetData = data.map((item) => ({
+      latitude: item.latitude,
+      longitude: item.longitude,
+    }));
+    const worksheet = utils.json_to_sheet(worksheetData);
+    const workbook = utils.book_new();
+
+    utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    const excelData = write(workbook, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelData], { type: "application/octet-stream" });
+
+    saveAs(blob, "data.xlsx");
+  };
+
   return {
-    readXLSXFile,
+    exportToExcel,
+    handleFileSelect,
   };
 };
 
