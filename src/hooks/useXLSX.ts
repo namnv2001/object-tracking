@@ -36,6 +36,7 @@ const useXLSX = () => {
     const worksheetData = data.map((item) => ({
       latitude: item.latitude,
       longitude: item.longitude,
+      timestamp: item.timestamp,
     }));
     const worksheet = utils.json_to_sheet(worksheetData);
     const workbook = utils.book_new();

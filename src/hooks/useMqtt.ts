@@ -1,5 +1,6 @@
 import { mqttConstants } from "constants/mqtt";
 import { useMqttContext } from "context";
+import { getTime } from "date-fns";
 import { connect } from "mqtt/dist/mqtt";
 import { IPublishPayload, ISubscription } from "types";
 
@@ -69,9 +70,11 @@ const useMqtt = () => {
     const [lat, long] = payload.toString().split(",");
     const latitude = parseFloat(lat);
     const longitude = parseFloat(long);
+    const timestamp = getTime(new Date());
     const purifyData = {
       latitude,
       longitude,
+      timestamp,
     };
 
     if (isNaN(latitude) || isNaN(longitude)) {

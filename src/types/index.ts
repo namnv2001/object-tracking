@@ -18,6 +18,7 @@ export interface ILinkItem {
 export interface ILocationData {
   latitude: number;
   longitude: number;
+  timestamp: number;
 }
 
 export interface IContextProps {
