@@ -7,19 +7,8 @@ const Metric = () => {
   const { exportToExcel, handleFileSelect } = useXLSX();
   const { locationData } = useMqttContext();
 
-  const testData = [
-    {
-      latitude: 10.762622,
-      longitude: 106.660172,
-    },
-    {
-      latitude: 12.19238,
-      longitude: 120.6602,
-    },
-  ];
-
   const handleExport = () => {
-    exportToExcel(testData);
+    exportToExcel(locationData);
   };
 
   return (
