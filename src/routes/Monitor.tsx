@@ -6,7 +6,7 @@ import useMqtt from "hooks/useMqtt";
 import React, { useEffect } from "react";
 
 const Monitor = () => {
-  const { isSubscribed, toggleSubscribe } = useMqttContext();
+  const { isSubscribed, toggleSubscribe, currentSpeed } = useMqttContext();
   const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
   const { topic } = mqttConstants;
 
@@ -31,6 +31,7 @@ const Monitor = () => {
           Publish message
         </Button>
         <Switch checked={isSubscribed} onChange={onToggleSubscribe} />
+        <div>Current speed: {currentSpeed} m/s</div>
       </div>
       <TrackingMap />
     </>
