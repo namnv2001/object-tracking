@@ -31,7 +31,7 @@ const Home = () => {
         </Layout>
       </nav>
       <div id="detail">
-        <Layout className="mx-auto max-w-7xl h-screen sm:px-6 lg:px-8">
+        <Layout className="mx-auto max-w-7xl h-[calc(100vh_-_64px)] sm:px-6 lg:px-8">
           <div className="mt-10">
             {location.pathname !== "/" ? (
               <Outlet />

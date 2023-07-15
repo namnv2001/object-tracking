@@ -25,7 +25,9 @@ export interface IContextProps {
   isSubscribed: boolean;
   locationData: ILocationData[];
   locationExcelData: ILocationData[];
+  currentSpeed: number;
   toggleSubscribe: () => void;
+  setCurrentSpeed: (speed: number) => void;
   handleLocationData: (data: ILocationData) => void;
   handleLocationExcelData: (data: ILocationData[]) => void;
 }

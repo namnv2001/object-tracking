@@ -9,8 +9,10 @@ import { IContextProps, ILocationData } from "types";
 export const MQTTContext = createContext<IContextProps>({
   isSubscribed: false,
   locationData: [],
+  currentSpeed: 0,
   locationExcelData: [],
   toggleSubscribe: () => {},
+  setCurrentSpeed: () => {},
   handleLocationData: () => {},
   handleLocationExcelData: () => {},
 });
@@ -18,6 +20,7 @@ export const MQTTContext = createContext<IContextProps>({
 export const MQTTProvider = ({ children }: PropsWithChildren) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [locationData, setLocationData] = useState<ILocationData[]>([]);
+  const [currentSpeed, setCurrentSpeed] = useState(0);
   const [locationExcelData, setLocationExcelData] = useState<ILocationData[]>(
     []
   );
@@ -39,7 +42,9 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
       value={{
         isSubscribed,
         locationData,
+        currentSpeed,
         toggleSubscribe,
+        setCurrentSpeed,
         locationExcelData,
         handleLocationData,
         handleLocationExcelData,
