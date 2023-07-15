@@ -70,7 +70,7 @@ const useMqtt = () => {
     const [lat, long] = payload.toString().split(",");
     const latitude = parseFloat(lat);
     const longitude = parseFloat(long);
-    const timestamp = getTime(new Date());
+    const timestamp = getTime(new Date()); // milliseconds
     const purifyData = {
       latitude,
       longitude,

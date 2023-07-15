@@ -12,3 +12,9 @@ export const path = [
     name: "Metric",
   },
 ];
+
+export const setup = {
+  // calculate in meter
+  width: 5,
+  height: 4,
+};
