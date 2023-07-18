@@ -19,7 +19,7 @@ const TrackingMap = () => {
   }, [data, data.length, setCurrentSpeed]);
 
   return (
-    <div className="bg-cyan-200 h-[800px] relative">
+    <div className="bg-cyan-200 h-[600px] relative">
       {data.map((item, index) => (
         <>
           <Point key={index} index={index} {...item} />

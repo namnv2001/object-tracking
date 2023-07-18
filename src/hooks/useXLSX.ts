@@ -34,8 +34,8 @@ const useXLSX = () => {
   // Function to export data to Excel
   const exportToExcel = (data: ILocationData[]) => {
     const worksheetData = data.map((item) => ({
-      latitude: item.latitude,
-      longitude: item.longitude,
+      latitude: item.vertical,
+      longitude: item.horizontal,
       timestamp: item.timestamp,
     }));
     const worksheet = utils.json_to_sheet(worksheetData);
