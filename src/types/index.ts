@@ -21,11 +21,20 @@ export interface ILocationData {
   timestamp: number;
 }
 
+export interface ITrackingMap {
+  locationData: ILocationData[];
+  setCurrentSpeed: (speed: number) => void;
+}
+
+export type workSheetArray = [number, number, number][];
+
 export interface IContextProps {
   isSubscribed: boolean;
+  isOffline: boolean;
   locationData: ILocationData[];
   locationExcelData: ILocationData[];
   currentSpeed: number;
+  toggleOffline: () => void;
   toggleSubscribe: () => void;
   setCurrentSpeed: (speed: number) => void;
   handleLocationData: (data: ILocationData) => void;
