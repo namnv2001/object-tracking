@@ -15,7 +15,9 @@ const Monitor = () => {
   };
 
   useEffect(() => {
-    isSubscribed ? subscribeTopic({ topic }) : unsubscribeTopic({ topic });
+    isSubscribed
+      ? subscribeTopic({ topic, qos: 1 })
+      : unsubscribeTopic({ topic });
   }, [isSubscribed, subscribeTopic, unsubscribeTopic, topic]);
 
   const onClickPublishMessage = () => {

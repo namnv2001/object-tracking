@@ -68,16 +68,16 @@ const useMqtt = () => {
 
   client.on("message", (_topic, payload, _packet) => {
     const [lat, long] = payload.toString().split(",");
-    const latitude = parseFloat(lat);
-    const longitude = parseFloat(long);
+    const vertical = parseFloat(lat);
+    const horizontal = parseFloat(long);
     const timestamp = getTime(new Date()); // milliseconds
     const purifyData = {
-      latitude,
-      longitude,
+      vertical,
+      horizontal,
       timestamp,
     };
 
-    if (isNaN(latitude) || isNaN(longitude)) {
+    if (isNaN(vertical) || isNaN(horizontal)) {
       console.log("Invalid data:", payload.toString());
     } else handleLocationData(purifyData);
   });

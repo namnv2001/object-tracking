@@ -16,8 +16,8 @@ export interface ILinkItem {
 }
 
 export interface ILocationData {
-  latitude: number;
-  longitude: number;
+  vertical: number;
+  horizontal: number;
   timestamp: number;
 }
 

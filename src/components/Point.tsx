@@ -2,8 +2,8 @@ import React from "react";
 import { ILocationData } from "types";
 
 const Point = ({
-  latitude,
-  longitude,
+  vertical: latitude,
+  horizontal: longitude,
   index,
 }: ILocationData & {
   index: number;
