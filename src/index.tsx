@@ -29,7 +29,7 @@ const router = createBrowserRouter([
 
 const theme = {
   token: {
-    colorPrimary: "#ff2c2c",
+    colorPrimary: "#fc6711",
   },
 };
 

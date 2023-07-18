@@ -32,7 +32,7 @@ const Home = () => {
       </nav>
       <div id="detail">
         <Layout className="mx-auto max-w-7xl h-[calc(100vh_-_64px)] sm:px-6 lg:px-8">
-          <div className="mt-10">
+          <div className="mt-6">
             {location.pathname !== "/" ? (
               <Outlet />
             ) : (

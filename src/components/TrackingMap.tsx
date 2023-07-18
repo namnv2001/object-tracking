@@ -1,12 +1,10 @@
-import { useMqttContext } from "context";
 import { getDistantBetweenPoints } from "helpers";
 import React, { useEffect } from "react";
 import LineTo from "react-lineto";
+import { ITrackingMap } from "types";
 import Point from "./Point";
 
-const TrackingMap = () => {
-  const { locationData: data, setCurrentSpeed } = useMqttContext();
-
+const TrackingMap = ({ locationData: data, setCurrentSpeed }: ITrackingMap) => {
   useEffect(() => {
     const length = data.length;
     if (length > 1) {
@@ -22,10 +20,10 @@ const TrackingMap = () => {
     <div className="bg-cyan-200 h-[600px] relative">
       {data.map((item, index) => (
         <>
-          <Point key={index} index={index} {...item} />
+          <Point key={`point-key-${index}`} index={index} {...item} />
           <LineTo
             delay={0}
-            key={index}
+            key={`line-key-${index}`}
             from={`point-${index - 1}`}
             to={`point-${index}`}
           />

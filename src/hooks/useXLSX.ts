@@ -1,5 +1,6 @@
 import { useMqttContext } from "context";
-import { ILocationData } from "types";
+import { convertWorkSheetArrayToLocation } from "helpers";
+import { ILocationData, workSheetArray } from "types";
 import { read, utils, write } from "xlsx";
 const saveAs = require("file-saver");
 
@@ -22,8 +23,10 @@ const useXLSX = () => {
         const jsonData = utils.sheet_to_json(worksheet, { header: 1 });
 
         // Process the jsonData as needed
-        console.log(jsonData);
-        // handleLocationExcelData(jsonData);
+        const locationData = convertWorkSheetArrayToLocation(
+          jsonData as workSheetArray
+        );
+        handleLocationExcelData(locationData);
       };
 
       // Start reading the file
@@ -34,8 +37,8 @@ const useXLSX = () => {
   // Function to export data to Excel
   const exportToExcel = (data: ILocationData[]) => {
     const worksheetData = data.map((item) => ({
-      latitude: item.vertical,
-      longitude: item.horizontal,
+      vertical: item.vertical,
+      horizontal: item.horizontal,
       timestamp: item.timestamp,
     }));
     const worksheet = utils.json_to_sheet(worksheetData);
