@@ -7,11 +7,15 @@ import React, {
 import { IContextProps, ILocationData } from "types";
 
 export const MQTTContext = createContext<IContextProps>({
-  isSubscribed: false,
+  time: 0,
+  distance: 0,
+  currentSpeed: 0,
   isOffline: false,
   locationData: [],
-  currentSpeed: 0,
+  isSubscribed: false,
   locationExcelData: [],
+  setDistance: () => {},
+  setTotalTime: () => {},
   toggleOffline: () => {},
   toggleSubscribe: () => {},
   setCurrentSpeed: () => {},
@@ -22,6 +26,8 @@ export const MQTTContext = createContext<IContextProps>({
 export const MQTTProvider = ({ children }: PropsWithChildren) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [locationData, setLocationData] = useState<ILocationData[]>([]);
+  const [distance, setDistance] = useState(0);
+  const [time, setTime] = useState(0);
   const [currentSpeed, setCurrentSpeed] = useState(0);
   const [isOffline, setIsOffline] = useState(false);
   const [locationExcelData, setLocationExcelData] = useState<ILocationData[]>(
@@ -44,13 +50,21 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
     setLocationExcelData(data);
   };
 
+  const setTotalTime = (value: number) => {
+    setTime(value);
+  };
+
   return (
     <MQTTContext.Provider
       value={{
+        time,
+        distance,
         isOffline,
         isSubscribed,
         locationData,
         currentSpeed,
+        setDistance,
+        setTotalTime,
         toggleOffline,
         toggleSubscribe,
         setCurrentSpeed,

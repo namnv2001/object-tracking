@@ -1,8 +1,11 @@
 import { Button, Form, Switch } from "antd";
+import StatusTray from "components/StatusTray";
 import TrackingMap from "components/TrackingMap";
 import { mqttConstants } from "constants/mqtt";
 import { useMqttContext } from "context";
+import { fixDecimalPlaces } from "helpers";
 import useMqtt from "hooks/useMqtt";
+import useXLSX from "hooks/useXLSX";
 import React, { useEffect } from "react";
 
 const Monitor = () => {
@@ -16,9 +19,16 @@ const Monitor = () => {
     setCurrentSpeed,
     isOffline,
     toggleOffline,
+    time,
+    distance,
   } = useMqttContext();
   const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
+  const { exportToExcel, handleFileSelect } = useXLSX();
   const { topic } = mqttConstants;
+
+  const handleExport = () => {
+    exportToExcel(locationData);
+  };
 
   useEffect(() => {
     isSubscribed
@@ -30,7 +40,7 @@ const Monitor = () => {
     if (isSubscribed && isOffline) {
       toggleOffline();
     }
-  }, [isSubscribed, isOffline, toggleOffline, setCurrentSpeed]);
+  }, [isSubscribed, isOffline, toggleOffline]);
 
   const onClickPublishMessage = () => {
     publishMessage({
@@ -40,8 +50,8 @@ const Monitor = () => {
     });
   };
   return (
-    <>
-      <div className="flex justify-between items-center mb-6">
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between items-center py-6 px-4 bg-gray-200 rounded-md">
         <Button type="primary" onClick={onClickPublishMessage}>
           Publish message
         </Button>
@@ -51,13 +61,22 @@ const Monitor = () => {
         <Form.Item label="Subscribe" className="m-0">
           <Switch checked={isSubscribed} onChange={toggleSubscribe} />
         </Form.Item>
-        <div className="font-bold">Current speed: {currentSpeed} m/s</div>
+        <input type="file" onChange={handleFileSelect} className="w-48" />
+        <Button type="primary" onClick={handleExport}>
+          Export file
+        </Button>
       </div>
+      <StatusTray
+        distance={distance}
+        time={time}
+        averageSpeed={fixDecimalPlaces(distance / time) || 0}
+        currentSpeed={currentSpeed}
+      />
       <TrackingMap
         locationData={isOffline ? locationExcelData : locationData}
         setCurrentSpeed={setCurrentSpeed}
       />
-    </>
+    </div>
   );
 };
 
