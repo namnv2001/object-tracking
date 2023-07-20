@@ -18,3 +18,5 @@ export const setup = {
   width: 5,
   height: 4,
 };
+
+export const decimalPlaces = 3;

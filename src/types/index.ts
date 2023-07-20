@@ -28,12 +28,23 @@ export interface ITrackingMap {
 
 export type workSheetArray = [number, number, number][];
 
+export interface IStatusTray {
+  distance: number;
+  time: number;
+  averageSpeed: number;
+  currentSpeed: number;
+}
+
 export interface IContextProps {
-  isSubscribed: boolean;
+  time: number;
+  distance: number;
   isOffline: boolean;
+  currentSpeed: number;
+  isSubscribed: boolean;
   locationData: ILocationData[];
   locationExcelData: ILocationData[];
-  currentSpeed: number;
+  setTotalTime: (time: number) => void;
+  setDistance: (distance: number) => void;
   toggleOffline: () => void;
   toggleSubscribe: () => void;
   setCurrentSpeed: (speed: number) => void;
