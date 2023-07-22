@@ -43,6 +43,7 @@ const Monitor = () => {
       qos: defaultQos,
     });
   };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center py-6 px-4 bg-gray-200 rounded-md">

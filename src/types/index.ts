@@ -39,6 +39,9 @@ export interface IContextProps {
   toggleOffline: () => void;
   toggleSubscribe: () => void;
   setCurrentSpeed: (speed: number) => void;
-  handleLocationData: (data: ILocationData) => void;
+  handleLocationData: (
+    data: ILocationData | ILocationData[],
+    forceUpdate?: boolean
+  ) => void;
   handleLocationExcelData: (data: ILocationData[]) => void;
 }

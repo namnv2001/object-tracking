@@ -41,10 +41,21 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
     setIsOffline((value) => !value);
   };
 
-  const handleLocationData = (data: ILocationData) => {
-    setLocationData((value) => [...value, data]);
+  // single value for single run
+  const handleLocationData = (
+    data: ILocationData | ILocationData[],
+    forceUpdate?: boolean
+  ) => {
+    if (forceUpdate && Array.isArray(data)) {
+      setLocationData(data);
+    } else if (!Array.isArray(data)) {
+      setLocationData((value) => [...value, data]);
+    }
   };
 
+  console.log("global data", locationData.length);
+
+  // multiple value of runs
   const handleLocationExcelData = (data: ILocationData[]) => {
     setLocationExcelData(data);
   };

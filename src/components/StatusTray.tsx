@@ -13,13 +13,13 @@ const StatusTray = () => {
 
   return (
     <>
+      <BacktrackSlider />
       <div className="flex items-center justify-between px-4">
         <b>Distance: {distance}m</b>
         <b>Time: {time}s</b>
         <b>Average speed: {averageSpeed}m/s</b>
         <b>Current speed: {currentSpeed}m/s</b>
       </div>
-      <BacktrackSlider />
     </>
   );
 };
