@@ -14,7 +14,7 @@ const TrackingMap = ({ locationData: data, setCurrentSpeed }: ITrackingMap) => {
     for (let i = 0; i < data.length - 1; i++) {
       totalDistance += getDistantBetweenPoints(data[i], data[i + 1]);
     }
-    return totalDistance;
+    return fixDecimalPlaces(totalDistance);
   }, [data]);
 
   const totalTime = useMemo(() => {
@@ -46,7 +46,7 @@ const TrackingMap = ({ locationData: data, setCurrentSpeed }: ITrackingMap) => {
   ]);
 
   return (
-    <div className="bg-cyan-200 h-[600px] relative rounded-md">
+    <div className="bg-cyan-200 h-[540px] relative rounded-md">
       {data.map((item, index) => (
         <>
           <Point key={`point-key-${index}`} index={index} {...item} />
