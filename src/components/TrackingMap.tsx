@@ -2,11 +2,16 @@ import { useMqttContext } from "context";
 import { fixDecimalPlaces, getDistantBetweenPoints } from "helpers";
 import React, { useEffect, useMemo } from "react";
 import LineTo from "react-lineto";
-import { ITrackingMap } from "types";
 import Point from "./Point";
 
-const TrackingMap = ({ locationData: data, setCurrentSpeed }: ITrackingMap) => {
-  const { setTotalTime, setDistance, isOffline } = useMqttContext();
+const TrackingMap = () => {
+  const {
+    setTotalTime,
+    setDistance,
+    isOffline,
+    setCurrentSpeed,
+    locationData: data,
+  } = useMqttContext();
 
   const totalDistance = useMemo(() => {
     let totalDistance = 0;

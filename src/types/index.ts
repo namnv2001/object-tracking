@@ -21,24 +21,7 @@ export interface ILocationData {
   timestamp: number;
 }
 
-export interface ITrackingMap {
-  locationData: ILocationData[];
-  setCurrentSpeed: (speed: number) => void;
-}
-
 export type workSheetArray = [number, number, number][];
-
-export interface IStatusTray {
-  distance: number;
-  time: number;
-  averageSpeed: number;
-  currentSpeed: number;
-  data: ILocationData[];
-}
-
-export interface IBacktrackSlider {
-  data: ILocationData[];
-}
 
 export interface IInfoTooltip {
   message: string;
@@ -51,7 +34,6 @@ export interface IContextProps {
   currentSpeed: number;
   isSubscribed: boolean;
   locationData: ILocationData[];
-  locationExcelData: ILocationData[];
   setTotalTime: (time: number) => void;
   setDistance: (distance: number) => void;
   toggleOffline: () => void;

@@ -3,7 +3,6 @@ import StatusTray from "components/StatusTray";
 import TrackingMap from "components/TrackingMap";
 import { mqttConstants } from "constants/mqtt";
 import { useMqttContext } from "context";
-import { fixDecimalPlaces } from "helpers";
 import useMqtt from "hooks/useMqtt";
 import useXLSX from "hooks/useXLSX";
 import React, { useEffect } from "react";
@@ -14,13 +13,8 @@ const Monitor = () => {
     isSubscribed,
     toggleSubscribe,
     locationData,
-    locationExcelData,
-    currentSpeed,
-    setCurrentSpeed,
     isOffline,
     toggleOffline,
-    time,
-    distance,
   } = useMqttContext();
   const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
   const { exportToExcel, handleFileSelect } = useXLSX();
@@ -58,7 +52,7 @@ const Monitor = () => {
         <Form.Item label="Offline mode" className="m-0">
           <Switch checked={isOffline} onChange={toggleOffline} />
         </Form.Item>
-        <Form.Item label="Subscribe" className="m-0">
+        <Form.Item label="Subscribe topic" className="m-0">
           <Switch checked={isSubscribed} onChange={toggleSubscribe} />
         </Form.Item>
         <input type="file" onChange={handleFileSelect} className="w-48" />
@@ -66,17 +60,8 @@ const Monitor = () => {
           Export file
         </Button>
       </div>
-      <StatusTray
-        distance={distance}
-        time={time}
-        averageSpeed={fixDecimalPlaces(distance / time) || 0}
-        currentSpeed={currentSpeed}
-        data={isOffline ? locationExcelData : locationData}
-      />
-      <TrackingMap
-        locationData={isOffline ? locationExcelData : locationData}
-        setCurrentSpeed={setCurrentSpeed}
-      />
+      <StatusTray />
+      <TrackingMap />
     </div>
   );
 };

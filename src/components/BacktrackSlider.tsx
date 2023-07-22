@@ -1,12 +1,14 @@
 import { Slider } from "antd";
+import { useMqttContext } from "context";
 import { fixDecimalPlaces } from "helpers";
 import React, { useMemo, useState } from "react";
-import { IBacktrackSlider } from "types";
 import InfoTooltip from "./InfoTooltip";
 
-const BacktrackSlider = ({ data }: IBacktrackSlider) => {
+const BacktrackSlider = () => {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(100);
+
+  const { locationData: data } = useMqttContext();
 
   const [minValue, maxValue] = useMemo(() => {
     if (data.length <= 1) return [0, 100];
