@@ -71,6 +71,7 @@ const Monitor = () => {
         time={time}
         averageSpeed={fixDecimalPlaces(distance / time) || 0}
         currentSpeed={currentSpeed}
+        data={isOffline ? locationExcelData : locationData}
       />
       <TrackingMap
         locationData={isOffline ? locationExcelData : locationData}

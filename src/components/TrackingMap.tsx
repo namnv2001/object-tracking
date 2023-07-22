@@ -14,7 +14,7 @@ const TrackingMap = ({ locationData: data, setCurrentSpeed }: ITrackingMap) => {
     for (let i = 0; i < data.length - 1; i++) {
       totalDistance += getDistantBetweenPoints(data[i], data[i + 1]);
     }
-    return totalDistance;
+    return fixDecimalPlaces(totalDistance);
   }, [data]);
 
   const totalTime = useMemo(() => {

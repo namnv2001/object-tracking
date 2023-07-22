@@ -19,3 +19,7 @@ code {
 body {
   display: block;
 }
+
+.color-primary {
+  color: #eb1f3a;
+}

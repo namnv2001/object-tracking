@@ -33,6 +33,15 @@ export interface IStatusTray {
   time: number;
   averageSpeed: number;
   currentSpeed: number;
+  data: ILocationData[];
+}
+
+export interface IBacktrackSlider {
+  data: ILocationData[];
+}
+
+export interface IInfoTooltip {
+  message: string;
 }
 
 export interface IContextProps {
