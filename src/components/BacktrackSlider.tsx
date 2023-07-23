@@ -1,55 +1,54 @@
 import { Button, Slider } from "antd";
 import { useMqttContext } from "context";
-import { fixDecimalPlaces } from "helpers";
 import React, { useEffect, useMemo, useState } from "react";
-import { ILocationData } from "types";
 import InfoTooltip from "./InfoTooltip";
 
 const BacktrackSlider = () => {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(100);
-  // const [backupData, setBackupData] = useState<ILocationData[]>([]);
 
-  const {
-    locationData: data,
-    isSubscribed,
-    handleLocationData,
-    isOffline,
-  } = useMqttContext();
-  const backupData = [...data];
+  const { isSubscribed, isOffline, handleLocationData, locationExcelData } =
+    useMqttContext();
 
-  // const canBackTracking = data.length > 1 && (!isSubscribed || isOffline);
-  // useEffect(() => {
-  //   !canBackTracking && setBackupData(data);
-  // }, [canBackTracking, data]);
-
-  const disableTray = data.length <= 1 || isSubscribed;
+  const data = locationExcelData[locationExcelData.length - 1];
+  const neutralMode = !isSubscribed && !isOffline;
+  const disableTray = data.length <= 1 || isSubscribed || neutralMode;
 
   const [minValue, maxValue] = useMemo(() => {
     if (data.length <= 1) return [0, 100];
     const start = 0;
     const end = data[data.length - 1].timestamp - data[0].timestamp;
-    return [start, fixDecimalPlaces(end / 1000, 0)];
+    // only round up end value so actual value can always in range
+    return [start, Math.ceil(end / 1000)];
   }, [data]);
 
-  const getPointsInRange = () => {
-    const startTime = backupData[0].timestamp;
+  const pointsInRange = useMemo(() => {
+    if (neutralMode) return [];
+    if (data.length <= 1) return data;
+
+    const startTime = data[0].timestamp;
     const startRange = startTime + start * 1000;
     const endRange = startTime + end * 1000;
-    return backupData.filter((item) => {
-      return item.timestamp >= startRange && item.timestamp <= endRange;
-    });
-  };
+    return data.filter(
+      (item) => item.timestamp >= startRange && item.timestamp <= endRange
+    );
+  }, [data, end, neutralMode, start]);
+
+  // show data in range
+  useEffect(() => {
+    handleLocationData(pointsInRange);
+  }, [pointsInRange, handleLocationData]);
 
   const handleChangeSlider = (value: [number, number]) => {
     setStart(value[0]);
     setEnd(value[1]);
-    const pointsInRange = getPointsInRange();
-    handleLocationData(pointsInRange, true);
   };
 
   const resetData = () => {
-    handleLocationData(backupData, true);
+    handleLocationData(data);
+    // reset slider
+    setStart(minValue);
+    setEnd(maxValue);
   };
 
   return (

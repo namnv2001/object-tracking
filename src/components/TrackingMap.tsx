@@ -13,8 +13,6 @@ const TrackingMap = () => {
     locationData: data,
   } = useMqttContext();
 
-  console.log("tracking data", data.length);
-
   const totalDistance = useMemo(() => {
     let totalDistance = 0;
     if (data.length <= 1) return totalDistance;

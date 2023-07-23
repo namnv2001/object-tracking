@@ -2,6 +2,7 @@ import React, {
   PropsWithChildren,
   createContext,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import { IContextProps, ILocationData } from "types";
@@ -13,6 +14,7 @@ export const MQTTContext = createContext<IContextProps>({
   isOffline: false,
   locationData: [],
   isSubscribed: false,
+  locationExcelData: [[]],
   setDistance: () => {},
   setTotalTime: () => {},
   toggleOffline: () => {},
@@ -24,14 +26,29 @@ export const MQTTContext = createContext<IContextProps>({
 
 export const MQTTProvider = ({ children }: PropsWithChildren) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
+  // display information in the map
   const [locationData, setLocationData] = useState<ILocationData[]>([]);
   const [distance, setDistance] = useState(0);
   const [time, setTime] = useState(0);
   const [currentSpeed, setCurrentSpeed] = useState(0);
   const [isOffline, setIsOffline] = useState(false);
-  const [locationExcelData, setLocationExcelData] = useState<ILocationData[]>(
-    []
+  // data storage for metric
+  const [locationExcelData, setLocationExcelData] = useState<ILocationData[][]>(
+    [[]]
   );
+
+  useEffect(() => {
+    if (!isSubscribed && isOffline && locationExcelData.length) {
+      setLocationData(locationExcelData[locationExcelData.length - 1]);
+    }
+  }, [isOffline, isSubscribed, locationExcelData]);
+
+  // push online data to storage when unsubscribe
+  useEffect(() => {
+    if (!isSubscribed && locationData.length) {
+      handleLocationExcelData(locationData);
+    }
+  }, [isSubscribed]);
 
   const toggleSubscribe = () => {
     setIsSubscribed((value) => !value);
@@ -41,23 +58,14 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
     setIsOffline((value) => !value);
   };
 
-  // single value for single run
-  const handleLocationData = (
-    data: ILocationData | ILocationData[],
-    forceUpdate?: boolean
-  ) => {
-    if (forceUpdate && Array.isArray(data)) {
-      setLocationData(data);
-    } else if (!Array.isArray(data)) {
-      setLocationData((value) => [...value, data]);
-    }
+  const handleLocationData = (data: ILocationData | ILocationData[]) => {
+    Array.isArray(data)
+      ? setLocationData(data)
+      : setLocationData((value) => [...value, data]);
   };
 
-  console.log("global data", locationData.length);
-
-  // multiple value of runs
   const handleLocationExcelData = (data: ILocationData[]) => {
-    setLocationExcelData(data);
+    setLocationExcelData((prev) => [...prev, data]);
   };
 
   const setTotalTime = (value: number) => {
@@ -71,7 +79,8 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
         distance,
         isOffline,
         isSubscribed,
-        locationData: isOffline ? locationExcelData : locationData,
+        locationData,
+        locationExcelData,
         currentSpeed,
         setDistance,
         setTotalTime,
