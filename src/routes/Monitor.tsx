@@ -15,6 +15,7 @@ const Monitor = () => {
     locationData,
     isOffline,
     toggleOffline,
+    handleLocationData,
   } = useMqttContext();
   const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
   const { exportToExcel, handleFileSelect } = useXLSX();
@@ -22,6 +23,10 @@ const Monitor = () => {
 
   const handleExport = () => {
     exportToExcel(locationData);
+  };
+
+  const clearDisplayMapData = () => {
+    handleLocationData([]);
   };
 
   useEffect(() => {
@@ -49,6 +54,9 @@ const Monitor = () => {
       <div className="flex justify-between items-center py-6 px-4 bg-gray-200 rounded-md">
         <Button type="primary" onClick={onClickPublishMessage}>
           Publish message
+        </Button>
+        <Button type="primary" onClick={clearDisplayMapData}>
+          Clear map
         </Button>
         <Form.Item label="Offline mode" className="m-0">
           <Switch checked={isOffline} onChange={toggleOffline} />

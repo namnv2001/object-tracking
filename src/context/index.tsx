@@ -39,7 +39,7 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (!isSubscribed && isOffline && locationExcelData.length) {
-      setLocationData(locationExcelData[locationExcelData.length - 1]);
+      handleLocationData(locationExcelData[locationExcelData.length - 1]);
     }
   }, [isOffline, isSubscribed, locationExcelData]);
 
