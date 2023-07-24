@@ -15,7 +15,7 @@ const Monitor = () => {
     displayData,
     isOffline,
     toggleOffline,
-    updateDisplayData,
+    updateBackgroundData,
   } = useMqttContext();
   const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
   const { exportToExcel, handleFileSelect } = useXLSX();
@@ -26,7 +26,7 @@ const Monitor = () => {
   };
 
   const clearDisplayMapData = () => {
-    updateDisplayData([]);
+    updateBackgroundData([]);
   };
 
   useEffect(() => {
@@ -38,8 +38,9 @@ const Monitor = () => {
   useEffect(() => {
     if (isSubscribed && isOffline) {
       toggleOffline();
+      updateBackgroundData([]);
     }
-  }, [isSubscribed, isOffline, toggleOffline]);
+  }, [isSubscribed, isOffline, toggleOffline, updateBackgroundData]);
 
   const onClickPublishMessage = () => {
     publishMessage({

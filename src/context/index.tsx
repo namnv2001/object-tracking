@@ -13,8 +13,9 @@ export const MQTTContext = createContext<IContextProps>({
   currentSpeed: 0,
   isOffline: false,
   displayData: [],
-  isSubscribed: false,
+  backgroundData: [],
   storageData: [[]],
+  isSubscribed: false,
   setDistance: () => {},
   setTotalTime: () => {},
   toggleOffline: () => {},
@@ -22,6 +23,7 @@ export const MQTTContext = createContext<IContextProps>({
   setCurrentSpeed: () => {},
   updateDisplayData: () => {},
   updateStorageData: () => {},
+  updateBackgroundData: () => {},
 });
 
 export const MQTTProvider = ({ children }: PropsWithChildren) => {
@@ -30,23 +32,30 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
   const [time, setTime] = useState(0);
   const [currentSpeed, setCurrentSpeed] = useState(0);
   const [isOffline, setIsOffline] = useState(false);
-  // display information in the map
+  // display information in the map, always sync with background data
+  // one for display only, one for handle background logic (update data between modes)
   const [displayData, setDisplayData] = useState<ILocationData[]>([]);
+  const [backgroundData, setBackgroundData] = useState<ILocationData[]>([]);
   // data storage for metric
   const [storageData, setStorageData] = useState<ILocationData[][]>([[]]);
 
   useEffect(() => {
     if (!isSubscribed && isOffline && storageData.length) {
-      updateDisplayData(storageData[storageData.length - 1]);
+      updateBackgroundData(storageData[storageData.length - 1]);
     }
   }, [isOffline, isSubscribed, storageData]);
 
   // push online data to storage when unsubscribe
   useEffect(() => {
-    if (!isSubscribed && displayData.length) {
-      updateStorageData(displayData);
+    if (!isOffline && !isSubscribed && backgroundData.length) {
+      updateStorageData(backgroundData);
     }
-  }, [isSubscribed]);
+  }, [backgroundData, isOffline, isSubscribed]);
+
+  // sync background data with display data
+  useEffect(() => {
+    updateDisplayData(backgroundData);
+  }, [backgroundData]);
 
   const toggleSubscribe = () => {
     setIsSubscribed((value) => !value);
@@ -60,6 +69,12 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
     Array.isArray(data)
       ? setDisplayData(data)
       : setDisplayData((value) => [...value, data]);
+  };
+
+  const updateBackgroundData = (data: ILocationData | ILocationData[]) => {
+    Array.isArray(data)
+      ? setBackgroundData(data)
+      : setBackgroundData((value) => [...value, data]);
   };
 
   const updateStorageData = (data: ILocationData[]) => {
@@ -79,6 +94,7 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
         isSubscribed,
         displayData,
         storageData,
+        backgroundData,
         currentSpeed,
         setDistance,
         setTotalTime,
@@ -87,6 +103,7 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
         setCurrentSpeed,
         updateDisplayData,
         updateStorageData,
+        updateBackgroundData,
       }}
     >
       {children}

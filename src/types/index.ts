@@ -34,6 +34,7 @@ export interface IContextProps {
   currentSpeed: number;
   isSubscribed: boolean;
   displayData: ILocationData[];
+  backgroundData: ILocationData[];
   storageData: ILocationData[][];
   setTotalTime: (time: number) => void;
   setDistance: (distance: number) => void;
@@ -41,5 +42,6 @@ export interface IContextProps {
   toggleSubscribe: () => void;
   setCurrentSpeed: (speed: number) => void;
   updateDisplayData: (data: ILocationData | ILocationData[]) => void;
+  updateBackgroundData: (data: ILocationData | ILocationData[]) => void;
   updateStorageData: (data: ILocationData[]) => void;
 }

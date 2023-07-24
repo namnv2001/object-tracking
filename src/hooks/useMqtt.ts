@@ -6,7 +6,7 @@ import { IPublishPayload, ISubscription } from "types";
 
 // tutorial: https://www.emqx.com/en/blog/mqtt-js-tutorial
 const useMqtt = () => {
-  const { updateDisplayData } = useMqttContext();
+  const { updateBackgroundData } = useMqttContext();
   const client = connect("ws://broker.emqx.io:8083/mqtt", {
     clientId: mqttConstants.clientId,
     username: mqttConstants.username,
@@ -79,7 +79,7 @@ const useMqtt = () => {
 
     if (isNaN(vertical) || isNaN(horizontal)) {
       console.log("Invalid data:", payload.toString());
-    } else updateDisplayData(purifyData);
+    } else updateBackgroundData(purifyData);
   });
 
   return {

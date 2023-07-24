@@ -5,34 +5,44 @@ const useBacktracking = () => {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(100);
 
-  const { isSubscribed, updateDisplayData, storageData } = useMqttContext();
+  const { isSubscribed, updateDisplayData, backgroundData } = useMqttContext();
 
-  const data = storageData[storageData.length - 1];
-  const disableTray = data.length <= 1 || isSubscribed;
+  const disableTray = backgroundData.length <= 1 || isSubscribed;
 
   const [minValue, maxValue] = useMemo(() => {
-    if (data.length <= 1) return [0, 100];
+    if (backgroundData.length <= 1) return [0, 100];
     const start = 0;
-    const end = data[data.length - 1].timestamp - data[0].timestamp;
+    const end =
+      backgroundData[backgroundData.length - 1].timestamp -
+      backgroundData[0].timestamp;
     // only round up end value so actual value can always in range
     return [start, Math.ceil(end / 1000)];
-  }, [data]);
+  }, [backgroundData]);
 
   const pointsInRange = useMemo(() => {
-    if (data.length <= 1) return data;
+    if (backgroundData.length <= 1) return backgroundData;
 
-    const startTime = data[0].timestamp;
+    const startTime = backgroundData[0].timestamp;
     const startRange = startTime + start * 1000;
     const endRange = startTime + end * 1000;
-    return data.filter(
+    return backgroundData.filter(
       (item) => item.timestamp >= startRange && item.timestamp <= endRange
     );
-  }, [data, end, start]);
+  }, [backgroundData, end, start]);
 
   // show data in range
   useEffect(() => {
-    !isSubscribed && updateDisplayData(pointsInRange);
+    if (!isSubscribed) {
+      updateDisplayData(pointsInRange);
+    }
   }, [pointsInRange, updateDisplayData, isSubscribed]);
+
+  useEffect(() => {
+    if (!backgroundData.length) {
+      setStart(0);
+      setEnd(100);
+    }
+  }, [backgroundData]);
 
   const handleChangeSlider = (value: [number, number]) => {
     setStart(value[0]);
@@ -40,7 +50,7 @@ const useBacktracking = () => {
   };
 
   const resetData = () => {
-    updateDisplayData(data);
+    updateDisplayData(backgroundData);
     // reset slider
     setStart(minValue);
     setEnd(maxValue);
