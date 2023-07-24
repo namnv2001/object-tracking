@@ -5,7 +5,7 @@ import { read, utils, write } from "xlsx";
 const saveAs = require("file-saver");
 
 const useXLSX = () => {
-  const { handleLocationExcelData } = useMqttContext();
+  const { updateStorageData } = useMqttContext();
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -26,7 +26,7 @@ const useXLSX = () => {
         const locationData = convertWorkSheetArrayToLocation(
           jsonData as workSheetArray
         );
-        handleLocationExcelData(locationData);
+        updateStorageData(locationData);
       };
 
       // Start reading the file

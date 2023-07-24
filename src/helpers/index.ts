@@ -22,6 +22,8 @@ export const convertWorkSheetArrayToLocation = (worksheet: workSheetArray) => {
   }));
 };
 
-export const fixDecimalPlaces = (number: number) => {
-  return Number(number.toFixed(decimalPlaces));
+export const fixDecimalPlaces = (number: number, decimal?: number) => {
+  return Number(
+    number.toFixed(decimal !== undefined ? decimal : decimalPlaces)
+  );
 };
