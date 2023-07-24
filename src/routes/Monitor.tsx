@@ -12,21 +12,21 @@ const Monitor = () => {
   const {
     isSubscribed,
     toggleSubscribe,
-    locationData,
+    displayData,
     isOffline,
     toggleOffline,
-    handleLocationData,
+    updateDisplayData,
   } = useMqttContext();
   const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
   const { exportToExcel, handleFileSelect } = useXLSX();
   const { topic } = mqttConstants;
 
   const handleExport = () => {
-    exportToExcel(locationData);
+    exportToExcel(displayData);
   };
 
   const clearDisplayMapData = () => {
-    handleLocationData([]);
+    updateDisplayData([]);
   };
 
   useEffect(() => {

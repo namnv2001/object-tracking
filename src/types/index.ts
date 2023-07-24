@@ -33,13 +33,13 @@ export interface IContextProps {
   isOffline: boolean;
   currentSpeed: number;
   isSubscribed: boolean;
-  locationData: ILocationData[];
-  locationExcelData: ILocationData[][];
+  displayData: ILocationData[];
+  storageData: ILocationData[][];
   setTotalTime: (time: number) => void;
   setDistance: (distance: number) => void;
   toggleOffline: () => void;
   toggleSubscribe: () => void;
   setCurrentSpeed: (speed: number) => void;
-  handleLocationData: (data: ILocationData | ILocationData[]) => void;
-  handleLocationExcelData: (data: ILocationData[]) => void;
+  updateDisplayData: (data: ILocationData | ILocationData[]) => void;
+  updateStorageData: (data: ILocationData[]) => void;
 }

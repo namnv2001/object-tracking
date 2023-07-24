@@ -12,41 +12,39 @@ export const MQTTContext = createContext<IContextProps>({
   distance: 0,
   currentSpeed: 0,
   isOffline: false,
-  locationData: [],
+  displayData: [],
   isSubscribed: false,
-  locationExcelData: [[]],
+  storageData: [[]],
   setDistance: () => {},
   setTotalTime: () => {},
   toggleOffline: () => {},
   toggleSubscribe: () => {},
   setCurrentSpeed: () => {},
-  handleLocationData: () => {},
-  handleLocationExcelData: () => {},
+  updateDisplayData: () => {},
+  updateStorageData: () => {},
 });
 
 export const MQTTProvider = ({ children }: PropsWithChildren) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
-  // display information in the map
-  const [locationData, setLocationData] = useState<ILocationData[]>([]);
   const [distance, setDistance] = useState(0);
   const [time, setTime] = useState(0);
   const [currentSpeed, setCurrentSpeed] = useState(0);
   const [isOffline, setIsOffline] = useState(false);
+  // display information in the map
+  const [displayData, setDisplayData] = useState<ILocationData[]>([]);
   // data storage for metric
-  const [locationExcelData, setLocationExcelData] = useState<ILocationData[][]>(
-    [[]]
-  );
+  const [storageData, setStorageData] = useState<ILocationData[][]>([[]]);
 
   useEffect(() => {
-    if (!isSubscribed && isOffline && locationExcelData.length) {
-      handleLocationData(locationExcelData[locationExcelData.length - 1]);
+    if (!isSubscribed && isOffline && storageData.length) {
+      updateDisplayData(storageData[storageData.length - 1]);
     }
-  }, [isOffline, isSubscribed, locationExcelData]);
+  }, [isOffline, isSubscribed, storageData]);
 
   // push online data to storage when unsubscribe
   useEffect(() => {
-    if (!isSubscribed && locationData.length) {
-      handleLocationExcelData(locationData);
+    if (!isSubscribed && displayData.length) {
+      updateStorageData(displayData);
     }
   }, [isSubscribed]);
 
@@ -58,14 +56,14 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
     setIsOffline((value) => !value);
   };
 
-  const handleLocationData = (data: ILocationData | ILocationData[]) => {
+  const updateDisplayData = (data: ILocationData | ILocationData[]) => {
     Array.isArray(data)
-      ? setLocationData(data)
-      : setLocationData((value) => [...value, data]);
+      ? setDisplayData(data)
+      : setDisplayData((value) => [...value, data]);
   };
 
-  const handleLocationExcelData = (data: ILocationData[]) => {
-    setLocationExcelData((prev) => [...prev, data]);
+  const updateStorageData = (data: ILocationData[]) => {
+    setStorageData((prev) => [...prev, data]);
   };
 
   const setTotalTime = (value: number) => {
@@ -79,16 +77,16 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
         distance,
         isOffline,
         isSubscribed,
-        locationData,
-        locationExcelData,
+        displayData,
+        storageData,
         currentSpeed,
         setDistance,
         setTotalTime,
         toggleOffline,
         toggleSubscribe,
         setCurrentSpeed,
-        handleLocationData,
-        handleLocationExcelData,
+        updateDisplayData,
+        updateStorageData,
       }}
     >
       {children}

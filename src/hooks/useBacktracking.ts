@@ -5,10 +5,9 @@ const useBacktracking = () => {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(100);
 
-  const { isSubscribed, handleLocationData, locationExcelData } =
-    useMqttContext();
+  const { isSubscribed, updateDisplayData, storageData } = useMqttContext();
 
-  const data = locationExcelData[locationExcelData.length - 1];
+  const data = storageData[storageData.length - 1];
   const disableTray = data.length <= 1 || isSubscribed;
 
   const [minValue, maxValue] = useMemo(() => {
@@ -32,8 +31,8 @@ const useBacktracking = () => {
 
   // show data in range
   useEffect(() => {
-    !isSubscribed && handleLocationData(pointsInRange);
-  }, [pointsInRange, handleLocationData, isSubscribed]);
+    !isSubscribed && updateDisplayData(pointsInRange);
+  }, [pointsInRange, updateDisplayData, isSubscribed]);
 
   const handleChangeSlider = (value: [number, number]) => {
     setStart(value[0]);
@@ -41,7 +40,7 @@ const useBacktracking = () => {
   };
 
   const resetData = () => {
-    handleLocationData(data);
+    updateDisplayData(data);
     // reset slider
     setStart(minValue);
     setEnd(maxValue);
