@@ -21,18 +21,10 @@ export interface ILocationData {
   timestamp: number;
 }
 
-export interface ITrackingMap {
-  locationData: ILocationData[];
-  setCurrentSpeed: (speed: number) => void;
-}
-
 export type workSheetArray = [number, number, number][];
 
-export interface IStatusTray {
-  distance: number;
-  time: number;
-  averageSpeed: number;
-  currentSpeed: number;
+export interface IInfoTooltip {
+  message: string;
 }
 
 export interface IContextProps {
@@ -41,13 +33,15 @@ export interface IContextProps {
   isOffline: boolean;
   currentSpeed: number;
   isSubscribed: boolean;
-  locationData: ILocationData[];
-  locationExcelData: ILocationData[];
+  displayData: ILocationData[];
+  backgroundData: ILocationData[];
+  storageData: ILocationData[][];
   setTotalTime: (time: number) => void;
   setDistance: (distance: number) => void;
   toggleOffline: () => void;
   toggleSubscribe: () => void;
   setCurrentSpeed: (speed: number) => void;
-  handleLocationData: (data: ILocationData) => void;
-  handleLocationExcelData: (data: ILocationData[]) => void;
+  updateDisplayData: (data: ILocationData | ILocationData[]) => void;
+  updateBackgroundData: (data: ILocationData | ILocationData[]) => void;
+  updateStorageData: (data: ILocationData[]) => void;
 }

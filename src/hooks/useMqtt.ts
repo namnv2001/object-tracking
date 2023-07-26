@@ -6,7 +6,7 @@ import { IPublishPayload, ISubscription } from "types";
 
 // tutorial: https://www.emqx.com/en/blog/mqtt-js-tutorial
 const useMqtt = () => {
-  const { handleLocationData } = useMqttContext();
+  const { updateBackgroundData } = useMqttContext();
   let client: MqttClient | null = null;
   let reconnectInterval: NodeJS.Timeout | null = null;
   const RECONNECT_TIMEOUT = 5000; // Reconnect after 5 seconds if disconnected
@@ -58,7 +58,7 @@ const useMqtt = () => {
       if (isNaN(vertical) || isNaN(horizontal)) {
         console.log("Invalid data:", payload.toString());
       } else {
-        handleLocationData(purifiedData);
+        updateBackgroundData(purifiedData);
       }
     });
   };
