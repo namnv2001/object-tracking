@@ -2,66 +2,54 @@ import { mqttConstants } from "constants/mqtt";
 import { useMqttContext } from "context";
 import { getTime } from "date-fns";
 import { connect, MqttClient } from "mqtt/dist/mqtt";
+import { useEffect } from "react";
 import { IPublishPayload, ISubscription } from "types";
 
-// tutorial: https://www.emqx.com/en/blog/mqtt-js-tutorial
+// https://dev.to/emqx/how-to-use-mqtt-in-the-react-project-177e
 const useMqtt = () => {
   const { updateBackgroundData } = useMqttContext();
   let client: MqttClient | null = null;
-  let reconnectInterval: NodeJS.Timeout | null = null;
-  const RECONNECT_TIMEOUT = 5000; // Reconnect after 5 seconds if disconnected
 
-  const connectClient = () => {
-    client = connect("ws://broker.emqx.io:8083/mqtt", {
-      clientId: mqttConstants.clientId,
-      username: mqttConstants.username,
-      password: mqttConstants.password,
-    });
+  client = connect("ws://broker.emqx.io:8083/mqtt", {
+    clientId: mqttConstants.clientId,
+    username: mqttConstants.username,
+    password: mqttConstants.password,
+  });
 
-    client.on("connect", () => {
-      // console.log("Connected to MQTT broker");
-      // Clear the reconnect interval if we are connected
-      if (reconnectInterval) {
-        clearInterval(reconnectInterval);
-        reconnectInterval = null;
-      }
-    });
+  useEffect(() => {
+    if (client) {
+      client.on("connect", () => {
+        console.log("Connected to MQTT broker");
+      });
 
-    client.on("reconnect", () => {
-      // console.log("Trying to reconnect...");
-    });
+      client.on("reconnect", () => {
+        // console.log("Trying to reconnect...");
+      });
 
-    client.on("close", () => {
-      // console.log("Connection closed");
-      // Attempt to reconnect when the connection is closed
-      if (!reconnectInterval) {
-        reconnectInterval = setInterval(connectClient, RECONNECT_TIMEOUT);
-      }
-    });
+      client.on("error", (error) => {
+        console.error("MQTT error:", error.message);
+      });
 
-    client.on("error", (error) => {
-      console.error("MQTT error:", error.message);
-    });
+      client.on("message", (_topic, payload, _packet) => {
+        const [lat, long] = payload.toString().split(",");
+        const vertical = parseFloat(lat);
+        const horizontal = parseFloat(long);
+        const timestamp = getTime(new Date()); // milliseconds
+        const purifiedData = {
+          vertical,
+          horizontal,
+          timestamp,
+        };
+        console.log(purifiedData);
 
-    client.on("message", (_topic, payload, _packet) => {
-      const [lat, long] = payload.toString().split(",");
-      const vertical = parseFloat(lat);
-      const horizontal = parseFloat(long);
-      const timestamp = getTime(new Date()); // milliseconds
-      const purifiedData = {
-        vertical,
-        horizontal,
-        timestamp,
-      };
-      console.log(purifiedData);
-
-      if (isNaN(vertical) || isNaN(horizontal)) {
-        console.log("Invalid data:", payload.toString());
-      } else {
-        updateBackgroundData(purifiedData);
-      }
-    });
-  };
+        if (isNaN(vertical) || isNaN(horizontal)) {
+          console.log("Invalid data:", payload.toString());
+        } else {
+          updateBackgroundData(purifiedData);
+        }
+      });
+    }
+  }, [client, updateBackgroundData]);
 
   const subscribeTopic = (subscription: ISubscription) => {
     if (client) {
@@ -116,14 +104,12 @@ const useMqtt = () => {
     }
   };
 
-  // Initial connection attempt
-  connectClient();
-
   return {
     subscribeTopic,
     unsubscribeTopic,
     publishMessage,
     disconnect,
+    // connectClient,
   };
 };
 

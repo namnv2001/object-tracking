@@ -17,7 +17,8 @@ const Monitor = () => {
     toggleOffline,
     updateBackgroundData,
   } = useMqttContext();
-  const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
+  const { subscribeTopic, publishMessage, unsubscribeTopic, disconnect } =
+    useMqtt();
   const { exportToExcel, handleFileSelect } = useXLSX();
   const { topic } = mqttConstants;
 
@@ -30,10 +31,13 @@ const Monitor = () => {
   };
 
   useEffect(() => {
-    isSubscribed
-      ? subscribeTopic({ topic, qos: defaultQos })
-      : unsubscribeTopic({ topic });
-  }, [isSubscribed, subscribeTopic, unsubscribeTopic, topic]);
+    if (isSubscribed) {
+      subscribeTopic({ topic, qos: defaultQos });
+    } else {
+      unsubscribeTopic({ topic });
+      disconnect();
+    }
+  }, [isSubscribed, subscribeTopic, unsubscribeTopic, topic, disconnect]);
 
   useEffect(() => {
     if (isSubscribed && isOffline) {
