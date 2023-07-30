@@ -1,8 +1,9 @@
+import { Button, Form, Switch } from "antd";
 import Connector from "components/Connector";
-import Publisher from "components/Publisher";
 import Subscriber from "components/Subscriber";
 import { useMqttContext } from "context";
 import { getTime } from "date-fns";
+import useXLSX from "hooks/useXLSX";
 import { IClientOptions } from "mqtt";
 import { MqttClient, connect } from "mqtt/dist/mqtt";
 import React, { useEffect, useState } from "react";
@@ -15,10 +16,17 @@ type MqttMessage = {
 
 const MQTTHandler = () => {
   const [client, setClient] = useState<MqttClient | null>(null);
-  const [isSubed, setIsSub] = useState(false);
   const [payload, setPayload] = useState<MqttMessage>();
   const [connectStatus, setConnectStatus] = useState("Connect");
-  const { updateBackgroundData } = useMqttContext();
+  const {
+    isSubscribed,
+    displayData,
+    isOffline,
+    toggleOffline,
+    updateBackgroundData,
+    toggleSubscribe,
+  } = useMqttContext();
+  const { exportToExcel, handleFileSelect } = useXLSX();
 
   const mqttConnect = (host: string, mqttOption: IClientOptions) => {
     setConnectStatus("Connecting");
@@ -62,9 +70,9 @@ const MQTTHandler = () => {
   // set global data
   useEffect(() => {
     if (payload) {
-      const [lat, long] = payload.message.toString().split(",");
-      const vertical = parseFloat(lat);
-      const horizontal = parseFloat(long);
+      const [x, y] = payload.message.toString().split(",");
+      const vertical = parseFloat(y);
+      const horizontal = parseFloat(x);
       const timestamp = getTime(new Date()); // milliseconds
       const purifiedData = {
         vertical,
@@ -117,7 +125,7 @@ const MQTTHandler = () => {
           return;
         }
         console.log(`Subscribe to topics: ${topic}`);
-        setIsSub(true);
+        toggleSubscribe();
       });
     }
   };
@@ -131,20 +139,51 @@ const MQTTHandler = () => {
           return;
         }
         console.log(`unsubscribed topic: ${topic}`);
-        setIsSub(false);
+        toggleSubscribe();
       });
     }
   };
 
+  // MQTT connection logic above
+  const handleExport = () => {
+    exportToExcel(displayData);
+  };
+
+  const clearDisplayMapData = () => {
+    updateBackgroundData([]);
+  };
+
+  useEffect(() => {
+    if (isSubscribed && isOffline) {
+      toggleOffline();
+      updateBackgroundData([]);
+    }
+  }, [isSubscribed, isOffline, toggleOffline, updateBackgroundData]);
+
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center py-6 px-4 bg-gray-200 rounded-md">
       <Connector
         connect={mqttConnect}
         disconnect={mqttDisconnect}
         connectBtn={connectStatus}
       />
-      <Subscriber sub={mqttSub} unSub={mqttUnSub} isSubscribed={isSubed} />
-      <Publisher publish={mqttPublish} />
+      <Subscriber sub={mqttSub} unSub={mqttUnSub} />
+      <Form.Item label="Offline mode" className="m-0">
+        <Switch
+          checked={isOffline}
+          onChange={toggleOffline}
+          disabled={isSubscribed}
+        />
+      </Form.Item>
+
+      {/* <Publisher publish={mqttPublish} /> */}
+      <Button type="primary" onClick={clearDisplayMapData}>
+        Clear map
+      </Button>
+      <input type="file" onChange={handleFileSelect} className="w-48" />
+      <Button type="primary" onClick={handleExport}>
+        Export file
+      </Button>
     </div>
   );
 };

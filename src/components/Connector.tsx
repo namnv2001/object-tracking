@@ -29,7 +29,7 @@ const Connector = ({ connect, disconnect, connectBtn }: IConnectorProps) => {
   };
 
   return (
-    <div>
+    <div className="flex items-center gap-4">
       <Button type="primary" onClick={onConnect}>
         {connectBtn}
       </Button>
