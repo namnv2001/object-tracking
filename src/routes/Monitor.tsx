@@ -1,7 +1,7 @@
+import MQTTHandler from "components/MQTTHandler";
 import StatusTray from "components/StatusTray";
 import TrackingMap from "components/TrackingMap";
 import React from "react";
-import MQTTHandler from "./MQTTHandler";
 
 const Monitor = () => {
   return (
