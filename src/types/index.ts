@@ -1,12 +1,12 @@
+import { QoS } from "mqtt";
+
 export interface ISubscription {
   topic: string;
-  qos?: 0 | 1 | 2;
+  qos: QoS;
 }
 
-export interface IPublishPayload {
-  topic: string;
+export interface IPublishPayload extends ISubscription {
   payload: string;
-  qos?: 0 | 1 | 2;
 }
 
 export interface ILinkItem {

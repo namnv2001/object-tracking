@@ -1,75 +1,12 @@
-import { Button, Form, Switch } from "antd";
+import MQTTHandler from "components/MQTTHandler";
 import StatusTray from "components/StatusTray";
 import TrackingMap from "components/TrackingMap";
-import { mqttConstants } from "constants/mqtt";
-import { useMqttContext } from "context";
-import useMqtt from "hooks/useMqtt";
-import useXLSX from "hooks/useXLSX";
-import React, { useEffect } from "react";
+import React from "react";
 
 const Monitor = () => {
-  const defaultQos = 1;
-  const {
-    isSubscribed,
-    toggleSubscribe,
-    displayData,
-    isOffline,
-    toggleOffline,
-    updateBackgroundData,
-  } = useMqttContext();
-  const { subscribeTopic, publishMessage, unsubscribeTopic } = useMqtt();
-  const { exportToExcel, handleFileSelect } = useXLSX();
-  const { topic } = mqttConstants;
-
-  const handleExport = () => {
-    exportToExcel(displayData);
-  };
-
-  const clearDisplayMapData = () => {
-    updateBackgroundData([]);
-  };
-
-  useEffect(() => {
-    isSubscribed
-      ? subscribeTopic({ topic, qos: defaultQos })
-      : unsubscribeTopic({ topic });
-  }, [isSubscribed, subscribeTopic, unsubscribeTopic, topic]);
-
-  useEffect(() => {
-    if (isSubscribed && isOffline) {
-      toggleOffline();
-      updateBackgroundData([]);
-    }
-  }, [isSubscribed, isOffline, toggleOffline, updateBackgroundData]);
-
-  const onClickPublishMessage = () => {
-    publishMessage({
-      topic,
-      payload: "Hello world from my computer",
-      qos: defaultQos,
-    });
-  };
-
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between items-center py-6 px-4 bg-gray-200 rounded-md">
-        <Button type="primary" onClick={onClickPublishMessage}>
-          Publish message
-        </Button>
-        <Button type="primary" onClick={clearDisplayMapData}>
-          Clear map
-        </Button>
-        <Form.Item label="Offline mode" className="m-0">
-          <Switch checked={isOffline} onChange={toggleOffline} />
-        </Form.Item>
-        <Form.Item label="Subscribe topic" className="m-0">
-          <Switch checked={isSubscribed} onChange={toggleSubscribe} />
-        </Form.Item>
-        <input type="file" onChange={handleFileSelect} className="w-48" />
-        <Button type="primary" onClick={handleExport}>
-          Export file
-        </Button>
-      </div>
+      <MQTTHandler />
       <StatusTray />
       <TrackingMap />
     </div>

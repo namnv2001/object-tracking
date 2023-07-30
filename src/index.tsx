@@ -3,6 +3,8 @@ import { MQTTProvider } from "context";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Home from "routes/Home";
 import Metric from "routes/Metric";
 import Monitor from "routes/Monitor";
@@ -40,6 +42,7 @@ root.render(
   <MQTTProvider>
     <ConfigProvider theme={theme}>
       <RouterProvider router={router} />
+      <ToastContainer />
     </ConfigProvider>
   </MQTTProvider>
 );
