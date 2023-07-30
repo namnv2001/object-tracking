@@ -1,5 +1,6 @@
 import { Button, Form, Switch } from "antd";
 import Connector from "components/Connector";
+import Publisher from "components/Publisher";
 import Subscriber from "components/Subscriber";
 import { useMqttContext } from "context";
 import { getTime } from "date-fns";
@@ -7,6 +8,7 @@ import useXLSX from "hooks/useXLSX";
 import { IClientOptions } from "mqtt";
 import { MqttClient, connect } from "mqtt/dist/mqtt";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { IPublishPayload, ISubscription } from "types";
 
 type MqttMessage = {
@@ -47,11 +49,11 @@ const MQTTHandler = () => {
     if (client) {
       client.on("connect", () => {
         setConnectStatus("Connected");
-        console.log("connection successful");
+        toast.success("Connected successfully");
       });
 
       client.on("error", (err) => {
-        console.error("Connection error: ", err);
+        toast.error("Connection error: " + err);
         client.end();
       });
 
@@ -79,7 +81,6 @@ const MQTTHandler = () => {
         horizontal,
         timestamp,
       };
-      console.log(purifiedData);
 
       if (isNaN(vertical) || isNaN(horizontal)) {
         console.log("Invalid data:", payload.toString());
@@ -95,10 +96,10 @@ const MQTTHandler = () => {
       try {
         client.end(false, () => {
           setConnectStatus("Connect");
-          console.log("disconnected successfully");
+          toast.success("Disconnected successfully");
         });
       } catch (error) {
-        console.log("disconnect error:", error);
+        console.error("disconnect error:", error);
       }
     }
   };
@@ -109,8 +110,10 @@ const MQTTHandler = () => {
       const { topic, qos, payload } = context;
       client.publish(topic, payload, { qos }, (error) => {
         if (error) {
-          console.log("Publish error: ", error);
+          console.error("Publish error: ", error);
+          return;
         }
+        toast.success("Publish successfully");
       });
     }
   };
@@ -121,10 +124,11 @@ const MQTTHandler = () => {
       const { topic, qos } = subscription;
       client.subscribe(topic, { qos }, (error) => {
         if (error) {
-          console.log("Subscribe to topics error", error);
+          console.error("Subscribe to topics error", error);
+          toast.error("Subscribe to topics error");
           return;
         }
-        console.log(`Subscribe to topics: ${topic}`);
+        toast.success("Subscribe to topic: " + topic);
         toggleSubscribe();
       });
     }
@@ -136,9 +140,10 @@ const MQTTHandler = () => {
       client.unsubscribe(topic, { qos }, (error) => {
         if (error) {
           console.log("Unsubscribe error", error);
+          toast.error("Unsubscribe error");
           return;
         }
-        console.log(`unsubscribed topic: ${topic}`);
+        toast.success("Unsubscribe topic: " + topic);
         toggleSubscribe();
       });
     }
@@ -176,7 +181,7 @@ const MQTTHandler = () => {
         />
       </Form.Item>
 
-      {/* <Publisher publish={mqttPublish} /> */}
+      <Publisher publish={mqttPublish} />
       <Button type="primary" onClick={clearDisplayMapData}>
         Clear map
       </Button>
