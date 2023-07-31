@@ -166,7 +166,7 @@ const MQTTHandler = () => {
   }, [isSubscribed, isOffline, toggleOffline, updateBackgroundData]);
 
   return (
-    <div className="flex justify-between items-center py-6 px-4 bg-gray-200 rounded-md">
+    <div className="flex justify-between items-center">
       <Connector
         connect={mqttConnect}
         disconnect={mqttDisconnect}
@@ -180,11 +180,10 @@ const MQTTHandler = () => {
           disabled={isSubscribed}
         />
       </Form.Item>
-
-      <Publisher publish={mqttPublish} />
       <Button type="primary" onClick={clearDisplayMapData}>
         Clear map
       </Button>
+      <Publisher publish={mqttPublish} />
       <input type="file" onChange={handleFileSelect} className="w-48" />
       <Button type="primary" onClick={handleExport}>
         Export file

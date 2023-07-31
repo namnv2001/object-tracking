@@ -1,7 +1,7 @@
 import { useMqttContext } from "context";
 import { useEffect, useMemo, useState } from "react";
 
-const useBacktracking = () => {
+const useBacktracking = (step: number) => {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(100);
 
@@ -16,19 +16,24 @@ const useBacktracking = () => {
       backgroundData[backgroundData.length - 1].timestamp -
       backgroundData[0].timestamp;
     // only round up end value so actual value can always in range
-    return [start, Math.ceil(end / 1000)];
-  }, [backgroundData]);
+    return [start, Math.ceil(end / step)];
+  }, [backgroundData, step]);
 
   const pointsInRange = useMemo(() => {
     if (backgroundData.length <= 1) return backgroundData;
 
     const startTime = backgroundData[0].timestamp;
-    const startRange = startTime + start * 1000;
-    const endRange = startTime + end * 1000;
+    const startRange = startTime + start * step;
+    const endRange = startTime + end * step;
     return backgroundData.filter(
       (item) => item.timestamp >= startRange && item.timestamp <= endRange
     );
-  }, [backgroundData, end, start]);
+  }, [backgroundData, end, start, step]);
+
+  useEffect(() => {
+    setStart(minValue);
+    setEnd(maxValue);
+  }, [minValue, maxValue]);
 
   // show data in range
   useEffect(() => {

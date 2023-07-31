@@ -1,9 +1,10 @@
-import { Button, Slider } from "antd";
+import { Button, Select, Slider } from "antd";
 import useBacktracking from "hooks/useBacktracking";
-import React from "react";
+import React, { useState } from "react";
 import InfoTooltip from "./InfoTooltip";
 
 const BacktrackSlider = () => {
+  const [step, setStep] = useState(1000);
   const {
     end,
     start,
@@ -12,15 +13,30 @@ const BacktrackSlider = () => {
     resetData,
     disableTray,
     handleChangeSlider,
-  } = useBacktracking();
+  } = useBacktracking(step);
+
+  const options = [
+    { value: 1, label: "Miliseconds" },
+    { value: 10, label: "Centiseconds" },
+    { value: 100, label: "Deciseconds" },
+    { value: 1000, label: "Seconds" },
+  ];
 
   return (
-    <div className="flex items-center gap-4 px-4">
+    <div className="flex items-center gap-4">
       <Button type="primary" onClick={resetData} disabled={disableTray}>
         Reset filter
       </Button>
+      <Select
+        options={options}
+        placeholder="Filter option"
+        className="w-44"
+        value={step}
+        onChange={(value) => setStep(value)}
+        disabled={disableTray}
+      />
       <Slider
-        className="w-full"
+        className="w-full m-0"
         range
         keyboard
         step={1}
