@@ -1,5 +1,10 @@
 import { useMqttContext } from "context";
-import { fixDecimalPlaces, getDistantBetweenPoints } from "helpers";
+import {
+  fixDecimalPlaces,
+  getDistantBetweenPoints,
+  getTotalDistance,
+  getTotalTime,
+} from "helpers";
 import React, { useEffect, useMemo } from "react";
 import LineTo from "react-lineto";
 import Point from "./Point";
@@ -9,24 +14,11 @@ const TrackingMap = () => {
     useMqttContext();
 
   const totalDistance = useMemo(() => {
-    let totalDistance = 0;
-    if (displayData.length <= 1) return totalDistance;
-    for (let i = 0; i < displayData.length - 1; i++) {
-      totalDistance += getDistantBetweenPoints(
-        displayData[i],
-        displayData[i + 1]
-      );
-    }
-    return fixDecimalPlaces(totalDistance);
+    return getTotalDistance(displayData);
   }, [displayData]);
 
   const totalTime = useMemo(() => {
-    if (displayData.length <= 1) return 0;
-    return (
-      (displayData[displayData.length - 1].timestamp -
-        displayData[0].timestamp) /
-      1000
-    );
+    return getTotalTime(displayData);
   }, [displayData]);
 
   const currentSpeed = useMemo(() => {
