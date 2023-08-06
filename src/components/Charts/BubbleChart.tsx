@@ -5,6 +5,7 @@ import {
   PointElement,
   Tooltip,
 } from "chart.js";
+import { colors } from "constants/common";
 import { useMqttContext } from "context";
 import React from "react";
 import { Bubble } from "react-chartjs-2";
@@ -14,18 +15,6 @@ ChartJS.register(LinearScale, PointElement, Tooltip, Legend);
 
 const BubbleChart = () => {
   const { storageData } = useMqttContext();
-  const colors = [
-    "rgba(255, 99, 132, 1)",
-    "rgba(54, 162, 235, 1)",
-    "rgba(255, 206, 86, 1)",
-    "rgba(86, 255, 128, 1)",
-    "rgba(255, 86, 255, 1)",
-    "rgba(255, 107, 86, 1)",
-    "rgba(255, 86, 86, 1)",
-    "rgba(86, 255, 236, 1)",
-    "rgba(86, 86, 255, 1)",
-    "rgba(54, 86, 255, 1)",
-  ];
 
   const options = {
     scales: {

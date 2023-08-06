@@ -9,7 +9,7 @@ const Home = () => {
   const location = useLocation();
   return (
     <div id="sidebar" className="min-h-full">
-      <nav className="bg-gray-800 sticky top-0">
+      <nav className="bg-gray-800 sticky top-0 z-50">
         <Layout className="bg-gray-800 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">

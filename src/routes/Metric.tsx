@@ -1,14 +1,17 @@
-import LineChart from "components/Charts/LineChart";
 import BubbleChart from "components/Charts/BubbleChart";
-import RadarChart from "components/Charts/RadarChart";
+import LineChart from "components/Charts/LineOrRadarChart";
+import { useMqttContext } from "context";
 import React from "react";
 
 const Metric = () => {
+  const { storageData } = useMqttContext();
+
+  const length = storageData.filter((i) => i.length).length;
+
   return (
     <div className="flex flex-col justify-between items-center w-inherit">
       <BubbleChart />
-      <LineChart />
-      <RadarChart />
+      {length > 1 && <LineChart />}
     </div>
   );
 };
