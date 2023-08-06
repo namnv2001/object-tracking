@@ -23,18 +23,20 @@ ChartJS.register(
 
 const RadarChart = () => {
   const { storageData } = useMqttContext();
-  const datasets = storageData.map((item, index) => {
-    const distance = getTotalDistance(item);
-    const time = getTotalTime(item);
+  const datasets = storageData
+    .filter((i) => i.length)
+    .map((item, index) => {
+      const distance = getTotalDistance(item);
+      const time = getTotalTime(item);
 
-    return {
-      label: `Label ${index + 1}`,
-      data: [distance, time, distance / time || 0],
-      backgroundColor: "rgba(255, 99, 132, 0.2)",
-      borderColor: "rgba(255, 99, 132, 1)",
-      borderWidth: 1,
-    };
-  });
+      return {
+        label: `Label ${index + 1}`,
+        data: [distance, time, distance / time || 0],
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+      };
+    });
 
   const data = {
     labels: ["Distance", "Time", "Speed"],

@@ -33,19 +33,21 @@ const BubbleChart = () => {
     return matches.length;
   };
 
-  const datasets = storageData.map((item, index) => {
-    const data = item.map((i) => {
-      return { x: i.horizontal, y: i.vertical, r: getNumberOfMatches(i) };
-    });
+  const datasets = storageData
+    .filter((i) => i.length)
+    .map((item, index) => {
+      const data = item.map((i) => {
+        return { x: i.horizontal, y: i.vertical, r: getNumberOfMatches(i) };
+      });
 
-    return {
-      label: `Label ${index + 1}`,
-      data,
-      backgroundColor: "red",
-      borderColor: "red",
-      borderWidth: 1,
-    };
-  });
+      return {
+        label: `Label ${index + 1}`,
+        data,
+        backgroundColor: "red",
+        borderColor: "red",
+        borderWidth: 1,
+      };
+    });
 
   const data = {
     datasets,

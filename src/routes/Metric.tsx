@@ -6,9 +6,9 @@ import React from "react";
 const Metric = () => {
   return (
     <div className="flex flex-col justify-between items-center w-inherit">
+      <BubbleChart />
       <BarChart />
       <RadarChart />
-      <BubbleChart />
     </div>
   );
 };

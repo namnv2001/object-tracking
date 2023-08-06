@@ -25,7 +25,6 @@ const BarChart = () => {
   const { storageData } = useMqttContext();
   const options = {
     responsive: true,
-    indexAxis: "y" as const,
     elements: {
       bar: {
         borderWidth: 2,
@@ -33,25 +32,23 @@ const BarChart = () => {
     },
     plugins: {
       legend: {
-        position: "right" as const,
-      },
-      title: {
-        display: true,
-        text: "Chart.js Horizontal Bar Chart",
+        position: "top" as const,
       },
     },
   };
 
   const datasets = useMemo(() => {
-    return storageData.map((item, index) => {
-      const distance = getTotalDistance(item);
-      const time = getTotalTime(item);
+    return storageData
+      .filter((i) => i.length)
+      .map((item, index) => {
+        const distance = getTotalDistance(item);
+        const time = getTotalTime(item);
 
-      return {
-        label: `Label ${index + 1}`,
-        data: [distance, time, distance / time || 0],
-      };
-    });
+        return {
+          label: `Label ${index + 1}`,
+          data: [distance, time, distance / time || 0],
+        };
+      });
   }, [storageData]);
 
   const data = {
