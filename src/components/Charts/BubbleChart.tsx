@@ -14,11 +14,32 @@ ChartJS.register(LinearScale, PointElement, Tooltip, Legend);
 
 const BubbleChart = () => {
   const { storageData } = useMqttContext();
+  const colors = [
+    "rgba(255, 99, 132, 1)",
+    "rgba(54, 162, 235, 1)",
+    "rgba(255, 206, 86, 1)",
+    "rgba(86, 255, 128, 1)",
+    "rgba(255, 86, 255, 1)",
+    "rgba(255, 107, 86, 1)",
+    "rgba(255, 86, 86, 1)",
+    "rgba(86, 255, 236, 1)",
+    "rgba(86, 86, 255, 1)",
+    "rgba(54, 86, 255, 1)",
+  ];
 
   const options = {
     scales: {
       y: {
         beginAtZero: true,
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: "All position of every runs",
       },
     },
   };
@@ -41,10 +62,10 @@ const BubbleChart = () => {
       });
 
       return {
-        label: `Label ${index + 1}`,
+        label: `Run ${index + 1}`,
         data,
-        backgroundColor: "red",
-        borderColor: "red",
+        borderColor: colors[index],
+        backgroundColor: colors[index].replace("1)", "0.5)"),
         borderWidth: 1,
       };
     });
