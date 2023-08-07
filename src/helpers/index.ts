@@ -16,8 +16,8 @@ export const getDistantBetweenPoints = (
 export const convertWorkSheetArrayToLocation = (worksheet: workSheetArray) => {
   worksheet.shift(); // remove the first row
   return worksheet.map((item) => ({
-    vertical: item[0],
-    horizontal: item[1],
+    horizontal: item[0],
+    vertical: item[1],
     timestamp: item[2],
   }));
 };

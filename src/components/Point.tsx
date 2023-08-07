@@ -10,7 +10,7 @@ const Point = ({
 }) => {
   return (
     <div
-      className={`w-1 h-1 bg-red-500 rounded-full absolute point-${index}`}
+      className={`absolute point-${index}`}
       style={{
         top: `${latitude}%`,
         left: `${longitude}%`,
