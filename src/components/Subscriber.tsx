@@ -7,9 +7,11 @@ import { ISubscription } from "types";
 interface ISubscriberProps {
   sub: (values: ISubscription) => void;
   unSub: (values: ISubscription) => void;
+  disabled: boolean;
+  value: boolean;
 }
 
-const Subscriber = ({ sub, unSub }: ISubscriberProps) => {
+const Subscriber = ({ sub, unSub, disabled, value }: ISubscriberProps) => {
   const { isSubscribed } = useMqttContext();
   const preset: ISubscription = {
     topic: mqttConstants.topic,
@@ -22,7 +24,7 @@ const Subscriber = ({ sub, unSub }: ISubscriberProps) => {
 
   return (
     <Form.Item className="mb-0" label="Subscribe topic">
-      <Switch onChange={onFinish} />
+      <Switch onChange={onFinish} disabled={disabled} checked={value} />
     </Form.Item>
   );
 };

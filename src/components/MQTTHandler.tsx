@@ -19,7 +19,9 @@ type MqttMessage = {
 const MQTTHandler = () => {
   const [client, setClient] = useState<MqttClient | null>(null);
   const [payload, setPayload] = useState<MqttMessage>();
-  const [connectStatus, setConnectStatus] = useState("Connect");
+  const [connectStatus, setConnectStatus] = useState<
+    "Connect" | "Connecting" | "Connected" | "Reconnecting"
+  >("Connect");
   const {
     isSubscribed,
     displayData,
@@ -32,16 +34,6 @@ const MQTTHandler = () => {
 
   const mqttConnect = (host: string, mqttOption: IClientOptions) => {
     setConnectStatus("Connecting");
-    /**
-     * if protocol is "ws", connectUrl = "ws://broker.emqx.io:8083/mqtt"
-     * if protocol is "wss", connectUrl = "wss://broker.emqx.io:8084/mqtt"
-     *
-     * /mqtt: MQTT-WebSocket uniformly uses /path as the connection path,
-     * which should be specified when connecting, and the path used on EMQX is /mqtt.
-     *
-     * for more details about "mqtt.connect" method & options,
-     * please refer to https://github.com/mqttjs/MQTT.js#mqttconnecturl-options
-     */
     setClient(connect(host, mqttOption));
   };
 
@@ -129,7 +121,7 @@ const MQTTHandler = () => {
           return;
         }
         toast.success("Subscribe to topic: " + topic);
-        toggleSubscribe();
+        toggleSubscribe(true);
       });
     }
   };
@@ -144,7 +136,7 @@ const MQTTHandler = () => {
           return;
         }
         toast.success("Unsubscribe topic: " + topic);
-        toggleSubscribe();
+        toggleSubscribe(false);
       });
     }
   };
@@ -158,9 +150,10 @@ const MQTTHandler = () => {
     updateBackgroundData([]);
   };
 
+  // Turn off offline mode when subscribe topic
   useEffect(() => {
     if (isSubscribed && isOffline) {
-      toggleOffline();
+      toggleOffline(false);
       updateBackgroundData([]);
     }
   }, [isSubscribed, isOffline, toggleOffline, updateBackgroundData]);
@@ -169,10 +162,18 @@ const MQTTHandler = () => {
     <div className="flex justify-between items-center">
       <Connector
         connect={mqttConnect}
-        disconnect={mqttDisconnect}
-        connectBtn={connectStatus}
+        disconnect={() => {
+          toggleSubscribe(false);
+          mqttDisconnect();
+        }}
+        connectStatus={connectStatus}
       />
-      <Subscriber sub={mqttSub} unSub={mqttUnSub} />
+      <Subscriber
+        disabled={connectStatus === "Connect"}
+        sub={mqttSub}
+        unSub={mqttUnSub}
+        value={isSubscribed}
+      />
       <Form.Item label="Offline mode" className="m-0">
         <Switch
           checked={isOffline}
@@ -184,6 +185,8 @@ const MQTTHandler = () => {
         Clear map
       </Button>
       <Publisher publish={mqttPublish} />
+
+      {/* XLSX file import/export */}
       <input type="file" onChange={handleFileSelect} className="w-48" />
       <Button type="primary" onClick={handleExport}>
         Export file

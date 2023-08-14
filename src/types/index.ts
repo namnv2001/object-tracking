@@ -36,12 +36,14 @@ export interface IContextProps {
   displayData: ILocationData[];
   backgroundData: ILocationData[];
   storageData: ILocationData[][];
+  connectStatus: string;
   setTotalTime: (time: number) => void;
   setDistance: (distance: number) => void;
-  toggleOffline: () => void;
-  toggleSubscribe: () => void;
+  toggleOffline: (value: boolean) => void;
+  toggleSubscribe: (value: boolean) => void;
   setCurrentSpeed: (speed: number) => void;
   updateDisplayData: (data: ILocationData | ILocationData[]) => void;
   updateBackgroundData: (data: ILocationData | ILocationData[]) => void;
   updateStorageData: (data: ILocationData[]) => void;
+  setConnectStatus: (status: string) => void;
 }
