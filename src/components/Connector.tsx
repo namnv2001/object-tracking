@@ -1,15 +1,16 @@
-import { Button } from "antd";
+import { Form, Switch } from "antd";
 import { mqttConstants } from "constants/mqtt";
 import { IClientOptions } from "mqtt";
-import React from "react";
+import React, { useState } from "react";
 
 interface IConnectorProps {
   connect: (url: string, options: IClientOptions) => void;
   disconnect: () => void;
-  connectBtn: React.ReactNode;
+  connectStatus: React.ReactNode;
 }
 
-const Connector = ({ connect, disconnect, connectBtn }: IConnectorProps) => {
+const Connector = ({ connect, disconnect, connectStatus }: IConnectorProps) => {
+  const [isConnect, setIsConnect] = useState(false);
   const onConnect = () => {
     const { clientId, username, password } = mqttConstants;
     const url = "ws://broker.emqx.io:8083/mqtt";
@@ -24,18 +25,21 @@ const Connector = ({ connect, disconnect, connectBtn }: IConnectorProps) => {
     connect(url, options);
   };
 
-  const onDisconnect = () => {
-    disconnect();
+  const onChange = () => {
+    if (isConnect) {
+      disconnect();
+      setIsConnect(false);
+    } else {
+      onConnect();
+      setIsConnect(true);
+    }
   };
 
   return (
     <div className="flex items-center gap-4">
-      <Button type="primary" onClick={onConnect}>
-        {connectBtn}
-      </Button>
-      <Button danger disabled={connectBtn === "Connect"} onClick={onDisconnect}>
-        Disconnect
-      </Button>
+      <Form.Item label={connectStatus} className="m-0">
+        <Switch checked={isConnect} onChange={onChange} />
+      </Form.Item>
     </div>
   );
 };

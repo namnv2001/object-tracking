@@ -62,14 +62,14 @@ const LineChart = () => {
     const distances = storageData
       .filter((i) => i.length)
       .map((item) => {
-        const distance = getTotalDistance(item) / (isRadarChart ? 1000 : 1);
+        const distance = getTotalDistance(item);
         return distance;
       });
 
     const times = storageData
       .filter((i) => i.length)
       .map((item) => {
-        const time = getTotalTime(item) / (isRadarChart ? 3600 : 1);
+        const time = getTotalTime(item);
         return time;
       });
 
@@ -83,21 +83,21 @@ const LineChart = () => {
 
     return [
       {
-        label: `Distance (${isRadarChart ? "kilometers" : "meters"})`,
+        label: "Distance (meters)",
         data: distances,
         borderColor: colors[0],
         backgroundColor: getBackgroundColor(colors[0]),
         borderWidth: 1,
       },
       {
-        label: `Time (${isRadarChart ? "hours" : "seconds"})`,
+        label: "Time (seconds)",
         data: times,
         borderColor: colors[1],
         backgroundColor: getBackgroundColor(colors[1]),
         borderWidth: 1,
       },
       {
-        label: `Speed (meter per second)`,
+        label: "Speed (meter per second)",
         data: speeds,
         borderColor: colors[2],
         backgroundColor: getBackgroundColor(colors[2]),
