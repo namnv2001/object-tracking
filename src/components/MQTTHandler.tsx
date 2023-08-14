@@ -4,7 +4,6 @@ import Publisher from "components/Publisher";
 import Subscriber from "components/Subscriber";
 import { useMqttContext } from "context";
 import { getTime } from "date-fns";
-import useXLSX from "hooks/useXLSX";
 import { IClientOptions } from "mqtt";
 import { MqttClient, connect } from "mqtt/dist/mqtt";
 import React, { useEffect, useState } from "react";
@@ -24,13 +23,11 @@ const MQTTHandler = () => {
   >("Connect");
   const {
     isSubscribed,
-    displayData,
     isOffline,
     toggleOffline,
     updateBackgroundData,
     toggleSubscribe,
   } = useMqttContext();
-  const { exportToExcel, handleFileSelect } = useXLSX();
 
   const mqttConnect = (host: string, mqttOption: IClientOptions) => {
     setConnectStatus("Connecting");
@@ -142,10 +139,6 @@ const MQTTHandler = () => {
   };
 
   // MQTT connection logic above
-  const handleExport = () => {
-    exportToExcel(displayData);
-  };
-
   const clearDisplayMapData = () => {
     updateBackgroundData([]);
   };
@@ -185,12 +178,6 @@ const MQTTHandler = () => {
         Clear map
       </Button>
       <Publisher publish={mqttPublish} />
-
-      {/* XLSX file import/export */}
-      <input type="file" onChange={handleFileSelect} className="w-48" />
-      <Button type="primary" onClick={handleExport}>
-        Export file
-      </Button>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { Card } from "antd";
 import BacktrackSlider from "components/BacktrackSlider";
+import DataCenter from "components/DataCenter";
 import MQTTHandler from "components/MQTTHandler";
 import TrackingMap from "components/TrackingMap";
 import { useMqttContext } from "context";
@@ -8,6 +9,7 @@ import React, { useMemo, useState } from "react";
 
 const Monitor = () => {
   const [activeTab, setActiveTab] = useState("action_center");
+  const [map, setMap] = useState("map_1.png");
   const { distance, time, currentSpeed } = useMqttContext();
 
   const averageSpeed = useMemo(
@@ -28,11 +30,29 @@ const Monitor = () => {
       key: "backtrack",
       label: "Backtracking",
     },
+    {
+      key: "data_center",
+      label: "Data center",
+    },
+  ];
+
+  const mapOptions = [
+    {
+      value: "map_1.png",
+      label: "Map 1",
+    },
+    {
+      value: "map_2.png",
+      label: "Map 2",
+    },
   ];
 
   const content: Record<string, JSX.Element> = {
     action_center: <MQTTHandler />,
     backtrack: <BacktrackSlider />,
+    data_center: (
+      <DataCenter value={map} options={mapOptions} onChange={setMap} />
+    ),
   };
 
   return (
@@ -50,7 +70,7 @@ const Monitor = () => {
         <b>Average speed: {averageSpeed}m/s</b>
         <b>Current speed: {currentSpeed}m/s</b>
       </div>
-      <TrackingMap />
+      <TrackingMap map={map} />
     </div>
   );
 };
