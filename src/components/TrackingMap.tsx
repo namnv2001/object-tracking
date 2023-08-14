@@ -9,7 +9,11 @@ import React, { useEffect, useMemo } from "react";
 import LineTo from "react-lineto";
 import Point from "./Point";
 
-const TrackingMap = () => {
+interface ITrackingMapProps {
+  map: string;
+}
+
+const TrackingMap = ({ map }: ITrackingMapProps) => {
   const { setTotalTime, setDistance, isOffline, setCurrentSpeed, displayData } =
     useMqttContext();
 
@@ -45,7 +49,12 @@ const TrackingMap = () => {
   ]);
 
   return (
-    <div className="bg-cyan-200 h-[600px] relative rounded-md">
+    <div className="bg-cyan-200 relative rounded-md h-max w-max mx-auto">
+      <img
+        className="max-w-full max-h-[800px]"
+        src={require(`images/${map}`)}
+        alt="Can't display map"
+      />
       {displayData.map((item, index) => (
         <>
           <Point key={`point-key-${index}`} index={index} {...item} />
