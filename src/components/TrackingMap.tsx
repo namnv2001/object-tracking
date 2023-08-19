@@ -51,7 +51,7 @@ const TrackingMap = ({ map }: ITrackingMapProps) => {
   return (
     <div className="bg-cyan-200 relative rounded-md h-max w-max mx-auto">
       <img
-        className="max-w-full max-h-[800px]"
+        className="max-w-full max-h-[600px] opacity-80"
         src={require(`images/${map}`)}
         alt="Can't display map"
       />
