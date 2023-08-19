@@ -1,6 +1,5 @@
 import { Button, Form, Switch } from "antd";
 import Connector from "components/Connector";
-import Publisher from "components/Publisher";
 import Subscriber from "components/Subscriber";
 import { useMqttContext } from "context";
 import { getTime } from "date-fns";
@@ -9,6 +8,7 @@ import { MqttClient, connect } from "mqtt/dist/mqtt";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IPublishPayload, ISubscription } from "types";
+import InstructionModal from "./InstructionModal";
 
 type MqttMessage = {
   topic: string;
@@ -21,6 +21,7 @@ const MQTTHandler = () => {
   const [connectStatus, setConnectStatus] = useState<
     "Connect" | "Connecting" | "Connected" | "Reconnecting"
   >("Connect");
+  const [showModal, setShowModal] = useState(false);
   const {
     isSubscribed,
     isOffline,
@@ -60,25 +61,34 @@ const MQTTHandler = () => {
 
   // set global data
   useEffect(() => {
-    if (payload) {
-      const [x, y] = payload.message.toString().split(",");
-      const vertical = parseFloat(y);
-      const horizontal = parseFloat(x);
-      const timestamp = getTime(new Date()); // milliseconds
-      const purifiedData = {
-        vertical,
-        horizontal,
-        timestamp,
-      };
+    if (!payload) return;
+    if (payload.message === "require_manual_control") {
+      handleRequestManualControl();
+      return;
+    }
 
-      if (isNaN(vertical) || isNaN(horizontal)) {
-        console.log("Invalid data:", payload.toString());
-      } else {
-        updateBackgroundData(purifiedData);
-      }
+    // normal route
+    const [x, y] = payload.message.split(",");
+    const vertical = parseFloat(y);
+    const horizontal = parseFloat(x);
+    const timestamp = getTime(new Date()); // milliseconds
+    const purifiedData = {
+      vertical,
+      horizontal,
+      timestamp,
+    };
+
+    if (isNaN(vertical) || isNaN(horizontal)) {
+      console.log("Invalid data:", payload.toString());
+    } else {
+      updateBackgroundData(purifiedData);
     }
     // eslint-disable-next-line
   }, [payload]);
+
+  const handleRequestManualControl = () => {
+    setShowModal(true);
+  };
 
   const mqttDisconnect = () => {
     if (client) {
@@ -177,7 +187,11 @@ const MQTTHandler = () => {
       <Button type="primary" onClick={clearDisplayMapData}>
         Clear map
       </Button>
-      <Publisher publish={mqttPublish} />
+      <InstructionModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        onConfirm={mqttPublish}
+      />
     </div>
   );
 };
