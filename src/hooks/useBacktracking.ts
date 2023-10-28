@@ -15,16 +15,16 @@ const useBacktracking = (step: number) => {
     const end =
       backgroundData[backgroundData.length - 1].timestamp -
       backgroundData[0].timestamp;
-    // only round up end value so actual value can always in range
-    return [start, Math.ceil(end / step)];
+    return [start, end * step];
   }, [backgroundData, step]);
 
   const pointsInRange = useMemo(() => {
     if (backgroundData.length <= 1) return backgroundData;
 
     const startTime = backgroundData[0].timestamp;
-    const startRange = startTime + start * step;
-    const endRange = startTime + end * step;
+    // only floor end value so actual value can always in range
+    const startRange = startTime + Math.floor(start / step);
+    const endRange = startTime + Math.floor(end / step);
     return backgroundData.filter(
       (item) => item.timestamp >= startRange && item.timestamp <= endRange
     );

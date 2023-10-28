@@ -39,5 +39,5 @@ export const getTotalDistance = (data: ILocationData[]) => {
 
 export const getTotalTime = (data: ILocationData[]) => {
   if (data.length <= 1) return 0;
-  return (data[data.length - 1].timestamp - data[0].timestamp) / 1000;
+  return data[data.length - 1].timestamp - data[0].timestamp;
 };
