@@ -71,7 +71,7 @@ const MQTTHandler = () => {
     const [x, y] = payload.message.split(",");
     const vertical = parseFloat(y);
     const horizontal = parseFloat(x);
-    const timestamp = getTime(new Date()); // milliseconds
+    const timestamp = Math.floor(getTime(new Date()) / 1000); // seconds
     const purifiedData = {
       vertical,
       horizontal,

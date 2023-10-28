@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import InfoTooltip from "./InfoTooltip";
 
 const BacktrackSlider = () => {
-  const [step, setStep] = useState(1000);
+  const [step, setStep] = useState(1);
   const {
     end,
     start,
@@ -16,10 +16,10 @@ const BacktrackSlider = () => {
   } = useBacktracking(step);
 
   const options = [
-    { value: 1, label: "Miliseconds" },
-    { value: 10, label: "Centiseconds" },
-    { value: 100, label: "Deciseconds" },
-    { value: 1000, label: "Seconds" },
+    { value: 1000, label: "Miliseconds" },
+    { value: 100, label: "Centiseconds" },
+    { value: 10, label: "Deciseconds" },
+    { value: 1, label: "Seconds" },
   ];
 
   return (

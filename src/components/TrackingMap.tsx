@@ -29,7 +29,7 @@ const TrackingMap = ({ map }: ITrackingMapProps) => {
     if (displayData.length <= 1 || isOffline) return 0;
     const before = displayData[displayData.length - 2];
     const after = displayData[displayData.length - 1];
-    const time = Math.abs(after.timestamp - before.timestamp) / 1000; // seconds
+    const time = Math.abs(after.timestamp - before.timestamp); // seconds
     const distance = getDistantBetweenPoints(after, before); // meters
 
     return fixDecimalPlaces(distance / time); // m/s
@@ -49,7 +49,7 @@ const TrackingMap = ({ map }: ITrackingMapProps) => {
   ]);
 
   return (
-    <div className="bg-cyan-200 relative rounded-md h-max w-max mx-auto">
+    <div className="relative rounded-md h-max w-max mx-auto">
       <img
         className="max-w-full max-h-[600px] opacity-80"
         src={require(`images/${map}`)}
