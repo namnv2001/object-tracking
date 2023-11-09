@@ -1,16 +1,16 @@
 import { Button, Form, Switch } from "antd";
 import Connector from "components/Connector";
 import Subscriber from "components/Subscriber";
+import { maxPerDimension } from "constants/common";
 import { useMqttContext } from "context";
 import { getTime } from "date-fns";
+import { fixDecimalPlaces } from "helpers";
 import { IClientOptions } from "mqtt";
 import { MqttClient, connect } from "mqtt/dist/mqtt";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IPublishPayload, ISubscription } from "types";
-import InstructionModal from "./InstructionModal";
-import { fixDecimalPlaces } from "helpers";
-import { maxPerDimension } from "constants/common";
+import ObjectController from "./ObjectController";
 
 type MqttMessage = {
   topic: string;
@@ -164,7 +164,7 @@ const MQTTHandler = () => {
   }, [isSubscribed, isOffline, toggleOffline, updateBackgroundData]);
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center relative">
       <Connector
         connect={mqttConnect}
         disconnect={() => {
@@ -189,11 +189,7 @@ const MQTTHandler = () => {
       <Button type="primary" onClick={clearDisplayMapData}>
         Clear map
       </Button>
-      {/* <InstructionModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        onConfirm={mqttPublish}
-      /> */}
+      <ObjectController onConfirm={mqttPublish} />
     </div>
   );
 };
