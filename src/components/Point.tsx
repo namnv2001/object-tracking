@@ -2,8 +2,8 @@ import React from "react";
 import { ILocationData } from "types";
 
 const Point = ({
-  vertical: latitude,
-  horizontal: longitude,
+  vertical,
+  horizontal,
   index,
 }: ILocationData & {
   index: number;
@@ -12,8 +12,8 @@ const Point = ({
     <div
       className={`absolute point-${index}`}
       style={{
-        top: `${latitude}%`,
-        left: `${longitude}%`,
+        top: `${vertical}%`,
+        left: `${horizontal}%`,
       }}
     />
   );

@@ -1,14 +1,16 @@
 import { Button, Form, Switch } from "antd";
 import Connector from "components/Connector";
 import Subscriber from "components/Subscriber";
+import { maxPerDimension } from "constants/common";
 import { useMqttContext } from "context";
 import { getTime } from "date-fns";
+import { fixDecimalPlaces } from "helpers";
 import { IClientOptions } from "mqtt";
 import { MqttClient, connect } from "mqtt/dist/mqtt";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IPublishPayload, ISubscription } from "types";
-import InstructionModal from "./InstructionModal";
+import ObjectController from "./ObjectController";
 
 type MqttMessage = {
   topic: string;
@@ -21,7 +23,7 @@ const MQTTHandler = () => {
   const [connectStatus, setConnectStatus] = useState<
     "Connect" | "Connecting" | "Connected" | "Reconnecting"
   >("Connect");
-  const [showModal, setShowModal] = useState(false);
+
   const {
     isSubscribed,
     isOffline,
@@ -62,16 +64,20 @@ const MQTTHandler = () => {
   // set global data
   useEffect(() => {
     if (!payload) return;
-    if (payload.message === "require_manual_control") {
-      handleRequestManualControl();
-      return;
-    }
 
     // normal route
-    const [x, y] = payload.message.split(",");
-    const vertical = parseFloat(y);
-    const horizontal = parseFloat(x);
-    const timestamp = Math.floor(getTime(new Date()) / 1000); // seconds
+    const [x, y, time] = payload.message.split(":");
+
+    // convert map ration to 100 based
+    const convertTo100Based = (value: number) => {
+      return fixDecimalPlaces((value / maxPerDimension) * 100);
+    };
+
+    const vertical = convertTo100Based(parseFloat(y));
+    const horizontal = convertTo100Based(parseFloat(x));
+    const timestamp = !!time
+      ? Number(time)
+      : Math.floor(getTime(new Date()) / 1000); // seconds
     const purifiedData = {
       vertical,
       horizontal,
@@ -85,10 +91,6 @@ const MQTTHandler = () => {
     }
     // eslint-disable-next-line
   }, [payload]);
-
-  const handleRequestManualControl = () => {
-    setShowModal(true);
-  };
 
   const mqttDisconnect = () => {
     if (client) {
@@ -162,7 +164,7 @@ const MQTTHandler = () => {
   }, [isSubscribed, isOffline, toggleOffline, updateBackgroundData]);
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center relative">
       <Connector
         connect={mqttConnect}
         disconnect={() => {
@@ -187,11 +189,7 @@ const MQTTHandler = () => {
       <Button type="primary" onClick={clearDisplayMapData}>
         Clear map
       </Button>
-      <InstructionModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        onConfirm={mqttPublish}
-      />
+      <ObjectController onConfirm={mqttPublish} />
     </div>
   );
 };
