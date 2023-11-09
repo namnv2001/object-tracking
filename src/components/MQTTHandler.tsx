@@ -9,6 +9,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IPublishPayload, ISubscription } from "types";
 import InstructionModal from "./InstructionModal";
+import { fixDecimalPlaces } from "helpers";
+import { maxPerDimension } from "constants/common";
 
 type MqttMessage = {
   topic: string;
@@ -21,7 +23,7 @@ const MQTTHandler = () => {
   const [connectStatus, setConnectStatus] = useState<
     "Connect" | "Connecting" | "Connected" | "Reconnecting"
   >("Connect");
-  const [showModal, setShowModal] = useState(false);
+
   const {
     isSubscribed,
     isOffline,
@@ -62,16 +64,20 @@ const MQTTHandler = () => {
   // set global data
   useEffect(() => {
     if (!payload) return;
-    if (payload.message === "require_manual_control") {
-      handleRequestManualControl();
-      return;
-    }
 
     // normal route
-    const [x, y] = payload.message.split(",");
-    const vertical = parseFloat(y);
-    const horizontal = parseFloat(x);
-    const timestamp = Math.floor(getTime(new Date()) / 1000); // seconds
+    const [x, y, time] = payload.message.split(":");
+
+    // convert map ration to 100 based
+    const convertTo100Based = (value: number) => {
+      return fixDecimalPlaces((value / maxPerDimension) * 100);
+    };
+
+    const vertical = convertTo100Based(parseFloat(y));
+    const horizontal = convertTo100Based(parseFloat(x));
+    const timestamp = !!time
+      ? Number(time)
+      : Math.floor(getTime(new Date()) / 1000); // seconds
     const purifiedData = {
       vertical,
       horizontal,
@@ -85,10 +91,6 @@ const MQTTHandler = () => {
     }
     // eslint-disable-next-line
   }, [payload]);
-
-  const handleRequestManualControl = () => {
-    setShowModal(true);
-  };
 
   const mqttDisconnect = () => {
     if (client) {
@@ -187,11 +189,11 @@ const MQTTHandler = () => {
       <Button type="primary" onClick={clearDisplayMapData}>
         Clear map
       </Button>
-      <InstructionModal
+      {/* <InstructionModal
         showModal={showModal}
         setShowModal={setShowModal}
         onConfirm={mqttPublish}
-      />
+      /> */}
     </div>
   );
 };

@@ -15,9 +15,11 @@ export const path = [
 
 export const setup = {
   // calculate in meter
-  width: 5,
-  height: 4,
+  width: 3,
+  height: 3,
 };
+
+export const maxPerDimension = 3;
 
 export const decimalPlaces = 3;
 
