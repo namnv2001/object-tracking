@@ -2,12 +2,13 @@ export const mqttConstants = {
   clientId: "emqx_react_nyampasu",
   username: "emqx_test",
   password: "emqx_test",
-  topic: "tracking/nyam",
+  topic: "esp8266/test",
 };
 
 export const instructCommands = {
-  up: "2",
-  down: "8",
+  up: "8",
+  down: "2",
   left: "4",
   right: "6",
+  stop: "0",
 };

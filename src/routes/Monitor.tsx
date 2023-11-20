@@ -9,7 +9,7 @@ import React, { useMemo, useState } from "react";
 
 const Monitor = () => {
   const [activeTab, setActiveTab] = useState("action_center");
-  const [map, setMap] = useState("maze_1.png");
+  const [map, setMap] = useState("map_3.png");
   const { distance, time, currentSpeed } = useMqttContext();
 
   const averageSpeed = useMemo(
@@ -37,6 +37,18 @@ const Monitor = () => {
   ];
 
   const mapOptions = [
+    {
+      value: "map_g2.png",
+      label: "Map G2",
+    },
+    {
+      value: "smaller_map.png",
+      label: "Smaller map",
+    },
+    {
+      value: "map_3.png",
+      label: "Map 3",
+    },
     {
       value: "maze_1.png",
       label: "Map 1",
