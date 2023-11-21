@@ -12,14 +12,15 @@ import { toast } from "react-toastify";
 import { IPublishPayload, ISubscription } from "types";
 import ObjectController from "./ObjectController";
 
-type MqttMessage = {
-  topic: string;
-  message: string;
+type TPurifiedData = {
+  vertical: number;
+  horizontal: number;
+  timestamp: number;
 };
 
 const MQTTHandler = () => {
   const [client, setClient] = useState<MqttClient | null>(null);
-  const [payload, setPayload] = useState<MqttMessage>();
+  const [payload, setPayload] = useState<TPurifiedData>();
   const [connectStatus, setConnectStatus] = useState<
     "Connect" | "Connecting" | "Connected" | "Reconnecting"
   >("Connect");
@@ -38,6 +39,16 @@ const MQTTHandler = () => {
   };
 
   useEffect(() => {
+    // convert map ration to 100 based
+    const convertTo100Based = (value: number) => {
+      return fixDecimalPlaces((value / maxPerDimension) * 100, 4);
+    };
+
+    let count = 0,
+      sumVertical = 0,
+      sumHorizontal = 0;
+    const limit = 3;
+
     if (client) {
       client.on("connect", () => {
         setConnectStatus("Connected");
@@ -53,10 +64,33 @@ const MQTTHandler = () => {
         setConnectStatus("Reconnecting");
       });
 
-      client.on("message", (topic, message) => {
-        const payload = { topic, message: message.toString() };
-        setPayload(payload);
-        // console.log(`received message: ${message} from topic: ${topic}`);
+      client.on("message", (_topic, message) => {
+        const [x, y, time] = message.toString().split(":");
+
+        const vertical = convertTo100Based(parseFloat(y));
+        const horizontal = convertTo100Based(parseFloat(x));
+        const timestamp = !!time
+          ? Number(time)
+          : Math.floor(getTime(new Date()) / 1000); // seconds
+
+        sumVertical += vertical;
+        sumHorizontal += horizontal;
+        count++;
+
+        if (count === limit) {
+          const purifiedData = {
+            vertical: sumVertical / limit,
+            horizontal: sumHorizontal / limit,
+            timestamp,
+          };
+          if (isNaN(vertical) || isNaN(horizontal)) {
+          } else {
+            setPayload(purifiedData);
+          }
+          count = 0;
+          sumVertical = 0;
+          sumHorizontal = 0;
+        }
       });
     }
   }, [client]);
@@ -64,34 +98,7 @@ const MQTTHandler = () => {
   // set global data
   useEffect(() => {
     if (!payload) return;
-
-    // normal route
-    const [x, y, time] = payload.message.split(":");
-
-    // convert map ration to 100 based
-    const convertTo100Based = (value: number) => {
-      return fixDecimalPlaces((value / maxPerDimension) * 100, 4);
-    };
-
-    const vertical = convertTo100Based(parseFloat(y));
-    const horizontal = convertTo100Based(parseFloat(x));
-    const timestamp = !!time
-      ? Number(time)
-      : Math.floor(getTime(new Date()) / 1000); // seconds
-
-    // const receivedTime = getTime(new Date()) / 1000;
-    // console.log("delay", receivedTime - timestamp);
-    const purifiedData = {
-      vertical,
-      horizontal,
-      timestamp,
-    };
-
-    if (isNaN(vertical) || isNaN(horizontal)) {
-      // console.log("Invalid data:", payload.toString());
-    } else {
-      updateBackgroundData(purifiedData);
-    }
+    updateBackgroundData(payload);
     // eslint-disable-next-line
   }, [payload]);
 

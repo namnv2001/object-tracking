@@ -10,7 +10,7 @@ const Point = ({
 }) => {
   return (
     <div
-      className={`absolute w-4 h-4 rounded-full bg-red-500 point-${index}`}
+      className={`absolute top-0 bottom-0 left-0 right-0 w-2 h-2 rounded-full bg-red-500 point-${index}`}
       style={{
         top: `${vertical}%`,
         left: `${horizontal}%`,
