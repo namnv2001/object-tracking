@@ -3,6 +3,7 @@ export const mqttConstants = {
   username: "emqx_test",
   password: "emqx_test",
   topic: "esp8266/test",
+  controlTopic: "back",
 };
 
 export const instructCommands = {

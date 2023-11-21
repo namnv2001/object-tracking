@@ -13,19 +13,21 @@ interface IInstructionModalProps {
   onConfirm: (value: IPublishPayload) => void;
 }
 
-const controlTopic = "back";
-
 const ObjectController = (props: IInstructionModalProps) => {
   const { onConfirm: publish } = props;
 
   const onPublish = (value: string) => {
     publish({
-      // topic: mqttConstants.topic,
-      topic: controlTopic,
+      topic: mqttConstants.controlTopic,
       payload: value,
       qos: 1,
     });
-    console.log("published message:", value, "to topic:", controlTopic);
+    console.log(
+      "published message:",
+      value,
+      "to topic:",
+      mqttConstants.controlTopic
+    );
   };
 
   return (
