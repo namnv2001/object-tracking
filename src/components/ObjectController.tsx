@@ -2,6 +2,7 @@ import {
   DownOutlined,
   LeftOutlined,
   RightOutlined,
+  StopOutlined,
   UpOutlined,
 } from "@ant-design/icons";
 import { instructCommands, mqttConstants } from "constants/mqtt";
@@ -12,16 +13,19 @@ interface IInstructionModalProps {
   onConfirm: (value: IPublishPayload) => void;
 }
 
+const controlTopic = "back";
+
 const ObjectController = (props: IInstructionModalProps) => {
   const { onConfirm: publish } = props;
 
   const onPublish = (value: string) => {
     publish({
-      topic: mqttConstants.topic,
+      // topic: mqttConstants.topic,
+      topic: controlTopic,
       payload: value,
       qos: 1,
     });
-    console.log("published message:", value, "to topic:", mqttConstants.topic);
+    console.log("published message:", value, "to topic:", controlTopic);
   };
 
   return (
@@ -34,6 +38,10 @@ const ObjectController = (props: IInstructionModalProps) => {
         <LeftOutlined
           className="text-5xl hover:scale-110 transform transition-all"
           onClick={() => onPublish(instructCommands.left)}
+        />
+        <StopOutlined
+          className="text-5xl hover:scale-110 transform transition-all"
+          onClick={() => onPublish(instructCommands.stop)}
         />
         <RightOutlined
           className="text-5xl hover:scale-110 transform transition-all"

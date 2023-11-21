@@ -56,7 +56,7 @@ const MQTTHandler = () => {
       client.on("message", (topic, message) => {
         const payload = { topic, message: message.toString() };
         setPayload(payload);
-        console.log(`received message: ${message} from topic: ${topic}`);
+        // console.log(`received message: ${message} from topic: ${topic}`);
       });
     }
   }, [client]);
@@ -70,7 +70,7 @@ const MQTTHandler = () => {
 
     // convert map ration to 100 based
     const convertTo100Based = (value: number) => {
-      return fixDecimalPlaces((value / maxPerDimension) * 100);
+      return fixDecimalPlaces((value / maxPerDimension) * 100, 4);
     };
 
     const vertical = convertTo100Based(parseFloat(y));
@@ -78,6 +78,9 @@ const MQTTHandler = () => {
     const timestamp = !!time
       ? Number(time)
       : Math.floor(getTime(new Date()) / 1000); // seconds
+
+    // const receivedTime = getTime(new Date()) / 1000;
+    // console.log("delay", receivedTime - timestamp);
     const purifiedData = {
       vertical,
       horizontal,
@@ -85,7 +88,7 @@ const MQTTHandler = () => {
     };
 
     if (isNaN(vertical) || isNaN(horizontal)) {
-      console.log("Invalid data:", payload.toString());
+      // console.log("Invalid data:", payload.toString());
     } else {
       updateBackgroundData(purifiedData);
     }
