@@ -44,6 +44,10 @@ const MQTTHandler = () => {
       return fixDecimalPlaces((value / maxPerDimension) * 100, 4);
     };
 
+    // limit data to 0 - 100
+    const getLimitedData = (number: number) =>
+      number >= 0 && number <= 100 ? number : number < 0 ? 0 : 100;
+
     let count = 0,
       sumVertical = 0,
       sumHorizontal = 0;
@@ -69,20 +73,22 @@ const MQTTHandler = () => {
 
         const vertical = convertTo100Based(parseFloat(y));
         const horizontal = convertTo100Based(parseFloat(x));
-        const timestamp = !!time
-          ? Number(time)
-          : Math.floor(getTime(new Date()) / 1000); // seconds
 
-        sumVertical += vertical;
-        sumHorizontal += horizontal;
+        sumVertical += getLimitedData(vertical);
+        sumHorizontal += getLimitedData(horizontal);
         count++;
 
         if (count === limit) {
+          const timestamp = !!time
+            ? Number(time)
+            : Math.floor(getTime(new Date()) / 1000); // seconds
+
           const purifiedData = {
             vertical: sumVertical / limit,
             horizontal: sumHorizontal / limit,
             timestamp,
           };
+
           if (isNaN(vertical) || isNaN(horizontal)) {
           } else {
             setPayload(purifiedData);
