@@ -38,6 +38,10 @@ const Monitor = () => {
 
   const mapOptions = [
     {
+      value: "plain_map",
+      label: "Plain map",
+    },
+    {
       value: "map_g2.png",
       label: "Map G2",
     },

@@ -50,11 +50,15 @@ const TrackingMap = ({ map }: ITrackingMapProps) => {
 
   return (
     <div className="relative rounded-md h-max w-max mx-auto">
-      <img
-        className="max-w-full max-h-[450px] h-[450px] opacity-80"
-        src={require(`images/${map}`)}
-        alt="Can't display map"
-      />
+      {map !== "plain_map" ? (
+        <img
+          className="max-w-[700px] max-h-[450px] h-[450px] opacity-80"
+          src={require(`images/${map}`)}
+          alt="Can't display map"
+        />
+      ) : (
+        <div className="w-[600px] h-[600px] opacity-80 bg-blue-300" />
+      )}
       {displayData.map((item, index) => (
         <>
           <Point key={`point-key-${index}`} index={index} {...item} />
