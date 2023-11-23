@@ -25,7 +25,12 @@ const DataCenter = ({ value, options, onChange }: IDataCenterProps) => {
   return (
     <div className="flex items-center justify-between">
       <Form.Item label="Select map" className="m-0">
-        <Select value={value} options={options} onChange={onChange} />
+        <Select
+          className="!w-32"
+          value={value}
+          options={options}
+          onChange={onChange}
+        />
       </Form.Item>
       <Form.Item label="Import data" className="m-0">
         <input type="file" onChange={handleFileSelect} className="w-48" />
