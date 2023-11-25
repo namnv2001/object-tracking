@@ -20,7 +20,7 @@ type TPurifiedData = {
 
 const MQTTHandler = () => {
   const [client, setClient] = useState<MqttClient | null>(null);
-  const [payload, setPayload] = useState<TPurifiedData>();
+  const [payload, setPayload] = useState<TPurifiedData[]>([]);
   const [connectStatus, setConnectStatus] = useState<
     "Connect" | "Connecting" | "Connected" | "Reconnecting"
   >("Connect");
@@ -30,6 +30,7 @@ const MQTTHandler = () => {
     isOffline,
     toggleOffline,
     updateBackgroundData,
+    updateRealData,
     toggleSubscribe,
   } = useMqttContext();
 
@@ -51,7 +52,7 @@ const MQTTHandler = () => {
     let count = 0,
       sumVertical = 0,
       sumHorizontal = 0;
-    const limit = 3;
+    const limit = 1;
 
     if (client) {
       client.on("connect", () => {
@@ -71,8 +72,13 @@ const MQTTHandler = () => {
       client.on("message", (_topic, message) => {
         const [x, y, time] = message.toString().split(":");
 
-        const vertical = convertTo100Based(parseFloat(y));
-        const horizontal = convertTo100Based(parseFloat(x));
+        const floatX = parseFloat(x);
+        const floatY = parseFloat(y);
+
+        const vertical = convertTo100Based(floatY);
+        const horizontal = convertTo100Based(floatX);
+
+        console.log(message.toString());
 
         sumVertical += getLimitedData(vertical);
         sumHorizontal += getLimitedData(horizontal);
@@ -89,9 +95,15 @@ const MQTTHandler = () => {
             timestamp,
           };
 
+          const rawData = {
+            vertical: floatY,
+            horizontal: floatX,
+            timestamp,
+          };
+
           if (isNaN(vertical) || isNaN(horizontal)) {
           } else {
-            setPayload(purifiedData);
+            setPayload([purifiedData, rawData]);
           }
           count = 0;
           sumVertical = 0;
@@ -103,8 +115,9 @@ const MQTTHandler = () => {
 
   // set global data
   useEffect(() => {
-    if (!payload) return;
-    updateBackgroundData(payload);
+    if (!payload || !payload.length) return;
+    updateBackgroundData(payload[0]);
+    updateRealData(payload[1]);
     // eslint-disable-next-line
   }, [payload]);
 
@@ -130,7 +143,7 @@ const MQTTHandler = () => {
           console.error("Publish error: ", error);
           return;
         }
-        toast.success("Publish successfully");
+        // toast.success("Publish successfully");
       });
     }
   };

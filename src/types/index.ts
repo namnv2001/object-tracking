@@ -37,6 +37,8 @@ export interface IContextProps {
   backgroundData: ILocationData[];
   storageData: ILocationData[][];
   connectStatus: string;
+  realData: ILocationData[];
+  updateRealData: (data: ILocationData) => void;
   setTotalTime: (time: number) => void;
   setDistance: (distance: number) => void;
   toggleOffline: (value: boolean) => void;

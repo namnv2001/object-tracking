@@ -35,21 +35,33 @@ const useXLSX = () => {
   };
 
   // Function to export data to Excel
-  const exportToExcel = (data: ILocationData[]) => {
+  const exportToExcel = (
+    data: ILocationData[],
+    realData: ILocationData[],
+    fileName: string
+  ) => {
     const worksheetData = data.map((item) => ({
       vertical: item.vertical,
       horizontal: item.horizontal,
       timestamp: item.timestamp,
     }));
+    const realDataWorksheetData = realData.map((item) => ({
+      vertical: item.vertical,
+      horizontal: item.horizontal,
+      timestamp: item.timestamp,
+    }));
+
     const worksheet = utils.json_to_sheet(worksheetData);
+    const realDataWorksheet = utils.json_to_sheet(realDataWorksheetData);
     const workbook = utils.book_new();
 
     utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    utils.book_append_sheet(workbook, realDataWorksheet, "Sheet2");
 
     const excelData = write(workbook, { bookType: "xlsx", type: "array" });
     const blob = new Blob([excelData], { type: "application/octet-stream" });
 
-    saveAs(blob, "data.xlsx");
+    saveAs(blob, `${fileName}.xlsx`);
   };
 
   return {
