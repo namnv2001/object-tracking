@@ -16,10 +16,10 @@ interface IMapOptions {
 
 const DataCenter = ({ value, options, onChange }: IDataCenterProps) => {
   const { exportToExcel, handleFileSelect } = useXLSX();
-  const { displayData } = useMqttContext();
+  const { displayData, realData } = useMqttContext();
 
   const handleExport = () => {
-    exportToExcel(displayData);
+    exportToExcel(displayData, realData, "final_data");
   };
 
   return (

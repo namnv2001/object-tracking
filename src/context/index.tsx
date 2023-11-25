@@ -17,6 +17,8 @@ export const MQTTContext = createContext<IContextProps>({
   storageData: [[]],
   isSubscribed: false,
   connectStatus: "Connect",
+  realData: [],
+  updateRealData: () => {},
   setDistance: () => {},
   setTotalTime: () => {},
   toggleOffline: () => {},
@@ -41,6 +43,8 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
   // data storage for metric
   const [storageData, setStorageData] = useState<ILocationData[][]>([[]]);
   const [connectStatus, setConnectStatus] = useState("Connect");
+  // real data returned, not transformed
+  const [realData, setRealData] = useState<ILocationData[]>([]);
 
   useEffect(() => {
     if (!isSubscribed && isOffline && storageData.length) {
@@ -80,6 +84,10 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
       : setBackgroundData((value) => [...value, data]);
   };
 
+  const updateRealData = (data: ILocationData) => {
+    setRealData((prev) => [...prev, data]);
+  };
+
   const updateStorageData = (data: ILocationData[]) => {
     setStorageData((prev) => [...prev, data]);
   };
@@ -109,6 +117,8 @@ export const MQTTProvider = ({ children }: PropsWithChildren) => {
         updateBackgroundData,
         connectStatus,
         setConnectStatus,
+        realData,
+        updateRealData,
       }}
     >
       {children}
