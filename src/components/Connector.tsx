@@ -13,7 +13,7 @@ const Connector = ({ connect, disconnect, connectStatus }: IConnectorProps) => {
   const [isConnect, setIsConnect] = useState(false);
   const onConnect = () => {
     const { clientId, username, password } = mqttConstants;
-    const url = "ws://emqx@192.168.0.69:8083/mqtt";
+    const url = "ws://emqx@127.0.0.1:8083/mqtt";
     const options = {
       clientId,
       username,

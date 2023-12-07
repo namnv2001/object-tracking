@@ -15,8 +15,8 @@ export const path = [
 
 export const setup = {
   // calculate in meter
-  width: 2,
-  height: 2,
+  width: 3,
+  height: 3,
 };
 
 export const maxPerDimension = 5;
