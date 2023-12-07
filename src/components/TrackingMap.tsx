@@ -37,7 +37,7 @@ const TrackingMap = ({ map }: ITrackingMapProps) => {
 
   useEffect(() => {
     setDistance(totalDistance);
-    setTotalTime(totalTime);
+    setTotalTime(fixDecimalPlaces(totalTime));
     setCurrentSpeed(currentSpeed);
   }, [
     totalTime,
@@ -57,7 +57,7 @@ const TrackingMap = ({ map }: ITrackingMapProps) => {
           alt="Can't display map"
         />
       ) : (
-        <div className="w-[600px] h-[600px] opacity-80 bg-blue-300" />
+        <div className="w-[450px] h-[450px] opacity-80 bg-blue-300" />
       )}
       {displayData.map((item, index) => (
         <>
