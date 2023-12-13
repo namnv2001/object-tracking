@@ -41,18 +41,14 @@ const Monitor = () => {
       value: "plain_map",
       label: "Plain map",
     },
-    {
-      value: "map_g2.png",
-      label: "Map G2",
-    },
-    {
-      value: "smaller_map.png",
-      label: "Smaller map",
-    },
-    {
-      value: "map_3.png",
-      label: "Map 3",
-    },
+    // {
+    //   value: "map_g2.png",
+    //   label: "Map G2",
+    // },
+    // {
+    //   value: "smaller_map.png",
+    //   label: "Smaller map",
+    // },
     {
       value: "maze_1.png",
       label: "Map 1",
@@ -60,6 +56,14 @@ const Monitor = () => {
     {
       value: "maze_2.png",
       label: "Map 2",
+    },
+    {
+      value: "map_3.png",
+      label: "Map 3",
+    },
+    {
+      value: "tang1g2.png",
+      label: "Tang 1 G2",
     },
   ];
 
